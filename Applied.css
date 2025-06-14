@@ -1,0 +1,195 @@
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('your-image.jpg'); /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 0;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255,255,255,0.7); /* Adjust opacity as needed */
+    z-index: 0;
+    pointer-events: none;
+}
+
+header {
+    background: #2d3e50;
+    color: #fff;
+    padding: 20px 0;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+header h1 {
+    margin: 0;
+    text-align: center;
+    font-size: 2.2em;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+    margin: 10px 0 0 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+nav ul li {
+    display: inline-block;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+
+nav ul li a:hover {
+    color: #ffd700;
+}
+
+h2 {
+    text-align: center;
+    color: #2d3e50;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 1;
+}
+
+.job-card {
+    width: 420px;              /* Fixed width */
+    margin: 0 auto 18px auto;  /* Center horizontally */
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    padding: 20px 28px;
+    border: none;
+    word-break: break-word;
+    position: relative;
+    z-index: 1;
+}
+
+.job-card strong {
+    font-size: 1.2em;
+    color: #2d3e50;
+}
+
+.job-card p {
+    margin: 8px 0;
+}
+
+.job-card form {
+    margin-top: 12px;
+}
+
+.job-card input[type="submit"] {
+    background: #e74c3c;
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.2s;
+}
+
+.job-card input[type="submit"]:hover {
+    background: #c0392b;
+}
+
+/* Edit Notes link styled as button */
+.job-card .edit-notes-link {
+    display: inline-block;
+    background: #ffd700;
+    color: #2d3e50;
+    border: none;
+    border-radius: 20px;
+    padding: 6px 18px;
+    font-size: 1em;
+    font-weight: bold;
+    text-decoration: none;
+    margin-top: 8px;
+    margin-right: 8px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.job-card .edit-notes-link:hover {
+    background: #2d3e50;
+    color: #ffd700;
+}
+
+/* Save and Cancel buttons */
+.job-card .save-notes-btn,
+.job-card .cancel-edit-btn {
+    display: inline-block;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 22px;
+    font-size: 1em;
+    font-weight: bold;
+    margin-top: 8px;
+    margin-right: 8px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.job-card .save-notes-btn {
+    background: #2d3e50;
+    color: #fff;
+}
+.job-card .save-notes-btn:hover {
+    background: #ffd700;
+    color: #2d3e50;
+}
+
+.job-card .cancel-edit-btn {
+    background: #e74c3c;
+    color: #fff;
+}
+.job-card .cancel-edit-btn:hover {
+    background: #c0392b;
+    color: #fff;
+}
+
+footer {
+    background: #2d3e50;
+    color: #fff;
+    text-align: center;
+    padding: 16px 0;
+    margin-top: auto;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+}
+
+.no-applied-msg {
+    text-align: center;
+    color: #2d3e50;
+    font-size: 1.15em;
+    margin-top: 40px;
+    background: #fff;
+    padding: 24px 16px;
+    border-radius: 8px;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    position: relative;
+    z-index: 1;
+}
