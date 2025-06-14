@@ -1,0 +1,10 @@
+:root {
+  font-family: sans-serif;
+}
+body {
+  margin: 2em;
+}
+.content {
+  width: 70vw;
+  margin: auto;
+}
