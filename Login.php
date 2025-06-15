@@ -36,7 +36,7 @@
                     header("Location: Listing.php");
                     die();
                 }else if($_SESSION['role'] === "employer"){
-                    header("Location: ManageListing.php");
+                    header("Location: ManageListings.php");
                     die();
                 }else if($_SESSION['role'] === "admin"){
                     header("Location: Dashboard.php");

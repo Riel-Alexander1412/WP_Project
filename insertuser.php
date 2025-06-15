@@ -7,13 +7,13 @@ $userPwd = $_POST["userPwd"];
 $userPhone = $_POST["userPhone"];
 $userAddr = $_POST["userAddr"];
 $userCOO = $_POST["userCOO"];
-$userDOB = $_POST["userDOB"];
-$userGender = $_POST["userGender"];
+$userDOB = $_POST[""];
+$userGender = $_POST[""];
 
-$userEdu = $_POST["userEdu"];
-$userResume = $_POST["userResume"];
-$userImage = $_POST["userImage"];
-$userUnique = $_POST["userUnique"];
+$userEdu = $_POST[""];
+$userResume = $_POST[""];
+$userImage = $_POST[""];
+$userUnique = $_POST[""];
 
 
 $query = "INSERT INTO user 
@@ -29,9 +29,6 @@ $result = $conn->query($query);
 
 if($result !== TRUE) {
     echo "Error: ".$insertquery;
-}
-else{
-    echo"<script>window.location.assign='login.html'</script>";
 }
 
 ?>
