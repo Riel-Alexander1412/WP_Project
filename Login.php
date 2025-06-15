@@ -1,13 +1,12 @@
 <?php
     include "connection.php";
     session_start();
-?>
-<?php
+
     $login_error = "";
     if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $email = $_POST["email"];   
         $password = $_POST["password"];
-        $sql = "SELECT 'admin' AS role, email, password FROM admin WHERE email = ? UNION ALL SELECT 'user' AS role, email, password FROM user WHERE email = ? UNION ALL SELECT 'employer' AS role, email, password FROM employer WHERE email = ?";
+        $sql = "SELECT 'admin' AS role, password, email, name FROM admin WHERE email = ? UNION ALL SELECT 'user' AS role, password, email, name FROM user WHERE email = ? UNION ALL SELECT 'employer' AS role, password, email, name FROM employer WHERE email = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("sss", $email, $email, $email);
 
@@ -19,7 +18,7 @@
             $user_data = null;
 
             foreach ($results as $user) {
-                if (password_verify($password, $user["password"])) {
+                if ($password === $user['password']) {
                     $authenticated = true;
                     $user_data = $user;
                     break;
@@ -29,11 +28,23 @@
             if ($authenticated) {
                 $_SESSION['loggedin'] = true;
                 $_SESSION['email'] = $user_data['email'];
+                $_SESSION['name'] = $user_data['name'];
                 $_SESSION['role'] = $user_data['role'];
-                $_SESSION['user_id'] = $user_data['id'];
-
+                
                 //Redirect to user specific sites
-                header("Location: Dashboard.php");
+                if($_SESSION['role'] === "user"){
+                    header("Location: Listing.php");
+                    die();
+                }else if($_SESSION['role'] === "employer"){
+                    header("Location: ManageListing.php");
+                    die();
+                }else if($_SESSION['role'] === "admin"){
+                    header("Location: Dashboard.php");
+                    die();
+                }else{
+                    header("Location: Login.php");
+                    die();
+                }
                 exit;
             } 
             else {

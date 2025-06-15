@@ -2,7 +2,7 @@
     include "connection.php";
     session_start();
     
-    if(!$_SESSION['loggedin']){
+    if(!isset($_SESSION["loggedin"])){
         header("Location: Login.php");
         die();
     }

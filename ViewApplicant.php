@@ -2,7 +2,7 @@
 include "connection.php";
 $user = "";
 if(true/*$_SERVER["REQUEST_METHOD"] == "POST"*/){
-    $id = 1;
+    $id = 2;
     $sql = "SELECT * FROM user WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $id);
@@ -448,9 +448,9 @@ if(true/*$_SERVER["REQUEST_METHOD"] == "POST"*/){
                     <div class="profile-header">
                         <div class="profile-pic">
                            <?php 
-                            if(true){
+                            if($user['Image']){
                                 //echo "<img src='" . htmlspecialchars($user['Image']) . "/>";
-                                echo "<img id='profileimage' src='Datastore/Image/test.jpg'/>";
+                                echo "<img id='profileimage' src='".$user['Image']."'/>";
                             }else{
                                 echo "<i class='fas fa-user'></i>";
                             }

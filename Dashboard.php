@@ -42,7 +42,7 @@
         }
     }
     function getActiveListing($conn){
-        $sql = "SELECT COUNT(*) AS job_count FROM job_listing WHERE status = 'Suspended'";
+        $sql = "SELECT COUNT(*) AS job_count FROM job_listing WHERE status = 'Active'";
         $result = $conn->query($sql);
 
         if ($result) {
@@ -91,6 +91,41 @@
     $totalJobListing = getTotalListing($conn);
     $ActiveJobListing = getActiveListing($conn);
     $SuspendedJobListing = getSuspendedListing($conn);
+    
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+
+        if (isset($data['action'])) {
+            $action = $data['action'];
+            switch ($action) {
+                case 'suspendJob':
+                    $jobId = $data['jobId'];
+                    // Update database
+                    $sql = "UPDATE job_listing SET Status = 'Suspended' WHERE ListingID = ?";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("i", $jobId);
+                    $stmt->execute();
+                    // Send response
+                    echo json_encode(['success' => true, 'message' => 'Job suspended']);
+                    exit;
+                case 'activateJob':
+                    $jobId = $data['jobId'];
+                    // Update database
+                    $sql = "UPDATE job_listing SET Status = 'Active' WHERE ListingID = ?";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("i", $jobId);
+                    $stmt->execute();
+
+                    // Send response
+                    echo json_encode(['success' => true, 'message' => 'Job activated']);
+                    exit;
+                }
+        }else{
+            echo json_encode(['success' => false, 'message' => 'Invalid action']);
+            exit;
+        }
+    }
 ?>
 <html lang="en">
 <head>
@@ -490,7 +525,7 @@
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             transition: transform 0.3s;
-            display: flex;
+            display: block;
             flex-direction: column;
         }
 
@@ -599,8 +634,8 @@
                 <div class="profile-pic">
                     <img id='profileimage' src='Datastore/Image/test.jpg' alt="Admin Profile"/>
                 </div>
-                <h2 class="profile-name">Awawa</h2>
-                <div class="profile-role">Unknown@gmail.com</div>
+                <h2 class="profile-name"><?php echo $_SESSION['name'];?></h2>
+                <div class="profile-role"><?php echo $_SESSION['email'];?></div>
             </div>           
             <div id="navbuttons">
                 <button class="option-btn active" data-target="ManageAdmins">
@@ -619,7 +654,7 @@
             </button>
         </div>
         <div id="content">
-            <div id="ManageAdmins" class="content-section">
+            <div id="ManageAdmins" class="content-section" style="display:none;">
                 <div class="dashboard-header">
                     <h1 class="dashboard-title"><i class="fas fa-user-shield"></i> Admin Management</h1>
                     <button class="btn btn-primary">
@@ -800,18 +835,32 @@
                             $stmt = $conn->prepare($sql);
                             $stmt->execute();
                             $result = $stmt->get_result();
-                            $currentDate = date('Y-m-d');
-
+                            $currentDate = new DateTime();
+                        
                             if ($result->num_rows > 0) {
-                                while ($job = $result->fetch_assoc()) {
-                                    $status = $job['Status'];
-                                    $isEnded = ($status == 'Active');
-                                    $displayStatus = $isEnded ? 'Ended' : $status;
-                                    
-                                    $statusClass = strtolower($displayStatus);
-                                    if ($statusClass == 'active') $statusClass = 'active';
-                                    elseif ($statusClass == 'suspended') $statusClass = 'inactive';
-                                    else $statusClass = 'pending';
+                                $results = $result->fetch_all(MYSQLI_ASSOC);
+
+                                foreach ($results as $job) {
+                                    $postedDate = new DateTime($job['PostDate']);
+                                    $interval = $currentDate->diff($postedDate);
+                                    $daysSincePosted = $interval->days;
+
+                                    // Determine status based on days since posted and admin status
+                                    $adminStatus = $job['Status']; // Actual status from database
+                                    $isEnded = ($daysSincePosted > 30);
+
+                                    // Override status to Ended if posted more than 30 days ago
+                                    $displayStatus = $isEnded ? 'Ended' : $adminStatus;
+
+                                    // Set CSS class based on status
+                                    $statusClass = 'pending';
+                                    if ($displayStatus === 'Active') {
+                                        $statusClass = 'active';
+                                    } elseif ($displayStatus === 'Suspended') {
+                                        $statusClass = 'inactive';
+                                    } elseif ($displayStatus === 'Ended') {
+                                        $statusClass = 'ended';
+                                    }
                                     
                                     //Create a card lol
                                     echo "<div class='job-card' data-status='$displayStatus'>";
@@ -825,6 +874,21 @@
                                     echo "<p><strong>Location:</strong>".$job['Location'] ?? 'N/A'."</p>";
                                     echo "<p><strong>Salary:</strong>".$job['Salary'] ?? 'N/A'."</p>";
                                     echo "</div>";
+                                    
+                                    if ($displayStatus == 'Active' && !$isEnded){
+                                        echo "<button class='btn btn-warning suspend-job' data-id='".$job['ListingID']."'>";
+                                        echo "<i class='fas fa-ban'></i> Suspend";
+                                        echo "</button>";
+                                    }
+                                    elseif ($displayStatus == 'Suspended'){
+                                        echo "<button class='btn btn-success activate-job' data-id='".$job['ListingID']."'>";
+                                        echo "<i class='fas fa-check-circle'></i> Unsuspend";
+                                        echo "</button>";
+                                    }
+                                    if($isEnded){
+                                        echo "<span class='status ended'>Ended</span>";
+                                    }
+                                    echo "</div>";
                                 }
                             }
                             else {
@@ -832,64 +896,108 @@
                             }
                             
                         ?>
-                            <!--
-                            //fix later
-                            <div class="card-actions">
-                                <?php if ($status == 'Active' && !$isEnded): ?>
-                                    <button class="btn btn-warning suspend-job" data-id="<?= $job['JobID'] ?>">
-                                        <i class="fas fa-ban"></i> Suspend
-                                    </button>
-                                <?php elseif ($status == 'Suspended'): ?>
-                                    <button class="btn btn-success activate-job" data-id="<?= $job['JobID'] ?>">
-                                        <i class="fas fa-check-circle"></i> Activate
-                                    </button>
-                                <?php endif; ?>
-                                <?php if ($isEnded): ?>
-                                    <span class="status ended">Ended</span>
-                                <?php endif; ?>
-                            </div>-->
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
-    <script>
-        // Tab switching functionality
+    <script type="application/javascript">
+        function sendPostRequest(data, cardElement) {
+            fetch("Dashboard.php", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Success:", data);
+                location.reload();
+            })
+            .catch(error => {
+                console.error("Error", error);
+            });
+        }
+        function updateJobStatus(action, jobId, cardElement) {
+            sendPostRequest({
+                action: action,
+                jobId: jobId
+            }, cardElement);
+        }   
+        
+        // Initialize event listeners
+        document.querySelectorAll('.suspend-job').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const jobId = this.dataset.id;
+                const cardElement = this.closest('.job-card');
+                if (confirm('Are you sure you want to suspend this job?')) {
+                    updateJobStatus('suspendJob', jobId, cardElement);
+                }
+            });
+        });
+
+        document.querySelectorAll('.activate-job').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const jobId = this.dataset.id;
+                const cardElement = this.closest('.job-card');
+                if (confirm('Are you sure you want to activate this job?')) {
+                    updateJobStatus('activateJob', jobId, cardElement);
+                }
+            });
+        });
+        
         document.addEventListener('DOMContentLoaded', function() {
             const optionButtons = document.querySelectorAll('.option-btn');
             const contentSections = document.querySelectorAll('.content-section');
             
+            function switchTab(target) {
+                // Update active button
+                optionButtons.forEach(btn => btn.classList.remove('active'));
+                document.querySelector(`.option-btn[data-target="${target}"]`).classList.add('active');
+                
+                // Show target section
+                contentSections.forEach(section => section.style.display = 'none');
+                document.getElementById(target).style.display = 'block';
+                
+                // Update URL hash
+                window.location.hash = target;
+            }
+            
+            // Handle initial page load based on URL hash
+            function handleInitialTab() {
+                const hash = window.location.hash.substring(1);
+                const validTargets = ['ManageAdmins', 'ManageUsers', 'ManageListing'];
+                
+                if (validTargets.includes(hash)) {
+                    switchTab(hash);
+                } else {
+                    // Default to ManageAdmins if no valid hash
+                    switchTab('ManageAdmins');
+                }
+            }
+            
+            // Set up button click handlers
             optionButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    const target = this.getAttribute('data-target');
-                    
-                    // Skip logout button
-                    if (this.classList.contains('logout')){
+                    const target = this.getAttribute('data-target');                   
+                    if (this.classList.contains('logout')) {
+                        // Logout functionality remains the same
                         const link = document.createElement('a');
-                        link.href = "Login.php";
+                        link.href = "Logout.php";
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
                         alert('Logging out...');
                         return;
                     }
-                    
-                    // Update active button
-                    optionButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Show target section
-                    if (target) {
-                        contentSections.forEach(section => {
-                            section.style.display = 'none';
-                        });
-                        document.getElementById(target).style.display = 'block';
-                    }
+                    switchTab(target);
                 });
             });
             
-            // Add animation to cards when they come into view
+            // Handle initial page load
+            handleInitialTab();
+            
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -911,70 +1019,27 @@
         });
         
         document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            // Update active button
-            document.querySelectorAll('.filter-btn').forEach(b => 
-                b.classList.remove('active'));
-            this.classList.add('active');
-            
-            const filter = this.dataset.filter;
-            document.querySelectorAll('.job-card').forEach(card => {
-                if (filter === 'all') {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 
-                        card.dataset.status === filter ? 'block' : 'none';
-                }
-            });
-        });
-    });
-    
-        // Job action buttons
-        document.querySelectorAll('.suspend-job').forEach(btn => {
             btn.addEventListener('click', function() {
-                const jobId = this.dataset.id;
-                if (confirm('Are you sure you want to suspend this job?')) {
-                    // AJAX call to suspend job
-                    console.log('Suspending job:', jobId);
-                    // In real implementation: fetch(`suspend-job.php?id=${jobId}`)
-                    // Then update UI
-                    this.closest('.job-card').querySelector('.status').textContent = 'Suspended';
-                    this.closest('.job-card').querySelector('.status').className = 'status inactive';
-                    this.closest('.card-actions').innerHTML = `
-                        <button class="btn btn-success activate-job" data-id="${jobId}">
-                            <i class="fas fa-check-circle"></i> Activate
-                        </button>
-                    `;
-                    // Re-attach event listener to new button
-                    document.querySelector(`.activate-job[data-id="${jobId}"]`)
-                        .addEventListener('click', activateHandler);
-                }
+                // Update active button
+                document.querySelectorAll('.filter-btn').forEach(b => 
+                    b.classList.remove('active'));
+                    this.classList.add('active');
+                    const filter = this.dataset.filter;
+                    document.querySelectorAll('.job-card').forEach(card => {
+                        const status = card.dataset.status;
+                        if (filter === 'all') {
+                            card.style.display = 'block';
+                        } else if(filter === "active" && status == "Active"){
+                            card.style.display = 'block';
+                        } else if(filter === "suspended" && status == "Suspended"){
+                            card.style.display = 'block';
+                        }else if(filter === "ended" && status == "Ended"){
+                            card.style.display = 'block';
+                        }else{
+                            card.style.display = card.dataset.status === filter ? 'block' : 'none';
+                        }
+                });
             });
-        });
-
-        const activateHandler = function() {
-            const jobId = this.dataset.id;
-            if (confirm('Are you sure you want to activate this job?')) {
-                // AJAX call to activate job
-                console.log('Activating job:', jobId);
-                // In real implementation: fetch(`activate-job.php?id=${jobId}`)
-                // Then update UI
-                this.closest('.job-card').querySelector('.status').textContent = 'Active';
-                this.closest('.job-card').querySelector('.status').className = 'status active';
-                this.closest('.card-actions').innerHTML = `
-                    <button class="btn btn-warning suspend-job" data-id="${jobId}">
-                        <i class="fas fa-ban"></i> Suspend
-                    </button>
-                `;
-                // Re-attach event listener to new button
-                document.querySelector(`.suspend-job[data-id="${jobId}"]`)
-                    .addEventListener('click', suspendHandler);
-            }
-        };
-
-        // Attach event listeners to activate buttons
-        document.querySelectorAll('.activate-job').forEach(btn => {
-            btn.addEventListener('click', activateHandler);
         });
     </script>
 </body>
