@@ -148,8 +148,8 @@ textarea {
 button,
 input[type="submit"] {
   padding: 10px 20px;
-  background-color: #14488b;
-  color: white;
+  background-color: #e9e6ef;
+  color: black;
   border: none;
   border-radius: 32px;
   cursor: pointer;
@@ -159,7 +159,8 @@ input[type="submit"] {
 
 button:hover,
 input[type="submit"]:hover {
-  background-color: #1450c9;
+  background-color: #4361ee;
+  color: white;
 }
 
 #edit-profile {
