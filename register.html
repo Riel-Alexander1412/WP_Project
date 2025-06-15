@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Title</title>
+    <link rel="stylesheet" href="register.css">
+    <meta name="viewport" content="width=device-width">
+    <script src="register.js"></script>
+</head>
+
+<script>
+
+function home(previous){
+
+
+    document.getElementById("user-personal").style.display = "none";
+    document.getElementById("user-work").style.display = "none";
+    document.getElementById("employer").style.display = "none";
+    
+    document.getElementById("main-page").style.display = "block";
+
+}
+
+
+</script>
+
+<body>
+
+    <div class="bg-img"></div>
+
+    <a onclick="home()" id="back-button"><img src="reg_logo/home-logo.svg" style="width: inherit; filter: invert(100%);"></a>
+
+    <div id="main-page">
+        <h2 style="margin-top: 0; margin-bottom: 100px;">Register as?</h2>
+        <div class="main-btn">
+            <button id="hover-btn" onclick="changetab('main-page','user-personal')"><p style="margin: 0;">User</p></button>
+            <button id="hover-btn" onclick="changetab('main-page','employer')"><p style="margin: 0;">Employer</p></button>
+        </div>
+        
+    </div>
+
+    
+    <form id="user" method="post" onsubmit="insertuser.php">  
+        <div id="user-personal">
+            <h2 style="margin-bottom: 0; text-align: center;">Enter your Personal Details</h2>
+
+            <span>
+                <img src="reg_logo/mail-logo.svg">
+                <input type="email" name="userEmail" placeholder="Email...">
+            </span>
+            
+            <span>
+                <img src="reg_logo/password-logo.svg">
+                <input type="password" name="userPwd" placeholder="Password...">
+            </span>
+                
+            <span>
+                <img src="reg_logo/name-logo.svg">
+                <input type="text" name="userName" placeholder="Name...">
+            </span>
+
+            <span>
+                <img src="reg_logo/phone-logo.svg">
+                <input type="text" name="userPhone" placeholder="Phone...">
+            </span>
+
+            <span>
+                <img src="reg_logo/birthday-logo.svg">
+                <input type="date" name="userDOB" placeholder="DD/MM/YYYY">
+            </span>
+
+            <span>
+                <img src="reg_logo/home-logo.svg">
+                <textarea name="userAddr" style="width: 310px; height: 60px; padding: 5px"></textarea>
+            </span>
+
+            <span>
+                <img src="reg_logo/country.svg">
+                <iframe src="country-dropdown.html" frameborder="0"></iframe>
+            </span>
+
+            <span>
+                <h3 style="margin: 0;">Gender</h3>
+                <div class="wrapper">
+                    
+                    <div class="gender-container" >
+                        <div class="custom-input" style="background-color: pink; border-bottom-left-radius: 10px ; border-top-left-radius: 10px;">
+                            <input type="radio" id="female" name="gender" value="Female">
+                            <label for="female"><img src="reg_logo/woman-logo.svg"></label>
+                        </div>
+                        <div class="custom-input" style="background-color: cornflowerblue; border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
+                            <input type="radio" id="male" name="gender" value="Male">
+                            <label for="male"><img src="reg_logo/man-logo.svg"></label>
+                        </div>
+                    </div>
+                    
+                </div>
+
+            </span>
+
+            <div class="submit-btn">
+                <button onclick="changetab('user-personal','user-work');" type="button">Next</button>
+            </div>
+            
+        </div>
+
+        <div id="user-work">
+            <h2 style="margin: 0; height: 50px; text-align: center;">Enter your Work Details</h2>
+
+            <span>
+                <img src="reg_logo/education-logo.svg">
+                <input type="text" name="userEdu" placeholder="Education(O-Level/Diploma)...">
+            </span>
+                
+            
+            <span>
+                <p>Resume</p>
+                <img src="reg_logo/work-logo.svg">
+                <input type="file" name="userResume" required>
+            </span>
+
+            <span style="margin-bottom: 30px;">
+                <p>Image</p>
+                <img src="reg_logo/image-logo.svg" alt="">
+                <input type="file" name="userImage">
+            </span>
+
+            <span>
+                <p>Unique Feature</p>
+                <img src="reg_logo/birthday-logo.svg" alt="">
+                <textarea name="userUnique" style="width: 300px; height: 80px; padding: 5px;"></textarea>
+            </span>
+
+            <div class="submit-btn">
+                <input type="submit" class="input-submit">
+            </div>
+        </div>
+
+    </form>
+
+    <form id="employer" action="insertemployer.php" method="post">
+        <h2 style="margin: 0; height: 50px; text-align: center;">Employer Details</h2>
+        
+        <span>
+            <img src="reg_logo/mail-logo.svg">
+            <input type="email" name="empEmail" placeholder="Email...">
+        </span>
+        
+        <span>
+            <img src="reg_logo/password-logo.svg">
+            <input type="password" name="empPwd" placeholder="Password...">
+        </span>
+            
+        <span>
+            <img src="reg_logo/name-logo.svg">
+            <input type="text" name="empName" placeholder="Name...">
+        </span>
+
+        <span>
+            <img src="reg_logo/phone-logo.svg">
+            <input type="text" name="empContact" placeholder="Contact Number...">
+        </span>
+
+        <span>
+            <img src="reg_logo/location-logo.svg">
+            <textarea name="empAddr" placeholder="Address..." style="width: 305px; height: 60px; padding: 5px; margin-bottom: 10px;"></textarea>
+        </span>
+
+        <span>
+            <img src="reg_logo/description-logo.svg">
+            <textarea name="empDesc" placeholder="Description..." style="width: 305px; height: 60px; padding: 5px; margin-top: 15px;"></textarea>
+        </span>
+
+        <span>
+            <img src="reg_logo/image-logo.svg">
+            <input type="file" name="empImage" placeholder="Contact Number...">
+        </span>
+
+        <div class="submit-btn">
+            <input type="submit" class="input-submit" onclick="changetab()" value="Submit">
+        </div>
+
+    </form>
+
+    <div id="successful">
+        <h2 style="margin-top: 0; margin-bottom: 100px;">Registration Successful!</h2>
+    </div>
+
+
+</body>

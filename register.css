@@ -33,6 +33,41 @@ body {
     cursor: pointer;
 }
 
+#main-page {
+    position: absolute;
+    top: 10%;
+    margin-inline: auto;
+    right: 0;
+    left: 0;
+    width: 50%;
+    height: 85%;
+    background-color: var(--primary-light);
+    justify-items: center;
+    border-radius: 20px;
+    align-content: center;
+    color: white;
+}
+
+.main-btn {
+    display: flex;
+    gap: 50px;
+}
+
+#main-page button {
+    width: 80px;
+    border: none;
+    width: 100px;
+    height: 60px;
+    padding: 10px;
+    cursor: pointer;
+    background-color: #0d47a1;
+    color: white;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 10px;
+}
+
+
 #user-personal {
     position: absolute;
     color: var(--light);
@@ -46,7 +81,7 @@ body {
     color: black;
     border-radius: 20px;
     padding: 30px;
-    display: flex;
+    display: none;
     flex-direction: column;
     gap: 30px;
 }
@@ -64,7 +99,8 @@ body {
     color: black;
     border-radius: 20px;
     padding: 30px;
-    display: flex;
+    display: none;
+    justify-content: center;
     flex-direction: column;
     gap: 30px;
 }
@@ -82,29 +118,19 @@ body {
     color: black;
     border-radius: 20px;
     padding: 30px;
-    display: flex;
+    display: none;
     flex-direction: column;
     gap: 30px;
 }
 
-form {
-    position: absolute;
-    color: var(--light);
-    top: 3%;
-    width: 50%;
-    height: 85%;
-    margin-inline: auto;
-    right: 0;
-    left: 0;
-    background-color: white;
-    color: black;
-    border-radius: 20px;
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    
+#user-work span {
+    gap: 0;
 }
+
+#user-work span img {
+    margin-right: 40px;
+}
+
 
 form span {
     display: flex;
@@ -127,29 +153,44 @@ form span input {
     width: 300px;
 }
 
-
-
 form span iframe {
     width: 300px;
     height: 30px;
 }
 
-form #submit-btn {
-    border: none;
-    background-color: var(--primary);
-    color: white;
-    border-radius: 10px;
-    width: 120px;
-    height: 45px;
-    cursor: pointer;
-}
 
 .submit-btn {
     display: flex; 
+    cursor: pointer;
+    height: 50px;
+    justify-content: right;
     flex-grow: 1;
-    justify-content: flex-end;
     align-items: end;
 }
+
+.submit-btn button {
+    width: 100px;
+    height: 40px;
+    background-color: #0d47a1;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+
+}
+
+.input-submit {
+    width: 100px;
+    height: 40px;
+    background-color: #0d47a1;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+
+}
+
+
 
 
 /* this the gender radio button */
