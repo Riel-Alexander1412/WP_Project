@@ -14,7 +14,7 @@ $success = '';
 
 // Check if job_id is provided
 if (!isset($_GET['job_id']) || !is_numeric($_GET['job_id'])) {
-    header('Location: manage_jobs.php');
+    header('Location: ManageListings.php');
     exit();
 }
 
@@ -25,7 +25,7 @@ $sql = "SELECT * FROM job_listing WHERE ListingID = $job_id AND EmployerID = $em
 $result = mysqli_query($conn, $sql);
 
 if (mysqli_num_rows($result) == 0) {
-    header('Location: manage_jobs.php');
+    header('Location: ManageListings.php');
     exit();
 }
 
@@ -89,8 +89,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="container">
             <a class="navbar-brand" href="#">Job Finder System</a>
             <div class="navbar-nav">
-                <a class="nav-link" href="employer_dashboard.php">Dashboard</a>
-                <a class="nav-link" href="manage_jobs.php">Manage Jobs</a>
+                <a class="nav-link" href="employer_Profile.html">Dashboard</a>
+                <a class="nav-link" href="ManageListings.php">Manage Jobs</a>
                 <a class="nav-link" href="logout.php">Logout</a>
             </div>
         </div>
@@ -186,7 +186,7 @@ echo htmlspecialchars($job['Description']);
             </div>
 
             <button type="submit" class="btn btn-primary">Update Job</button>
-            <a href="manage_jobs.php" class="btn btn-secondary">Cancel</a>
+            <a href="ManageListings.php" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 </body>

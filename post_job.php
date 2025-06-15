@@ -82,8 +82,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="container">
             <a class="navbar-brand" href="#">Job Finder System</a>
             <div class="navbar-nav">
-                <a class="nav-link" href="employer_dashboard.php">Dashboard</a>
-                <a class="nav-link" href="manage_jobs.php">Manage Jobs</a>
+                <a class="nav-link" href="employer_Profile.html">Dashboard</a>
+                <a class="nav-link" href="ManageListings.php">Manage Jobs</a>
                 <a class="nav-link" href="logout.php">Logout</a>
             </div>
         </div>
@@ -170,7 +170,7 @@ echo isset($_POST['description']) ? htmlspecialchars($_POST['description']) : ''
             </div>
 
             <button type="submit" class="btn btn-primary">Post Job</button>
-            <a href="manage_jobs.php" class="btn btn-secondary">Cancel</a>
+            <a href="ManageListings.php" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
 </body>

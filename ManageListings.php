@@ -70,7 +70,7 @@ $employer = mysqli_fetch_assoc($employer_result);
             <a class="navbar-brand" href="#">Job Finder System</a>
             <div class="navbar-nav">
                 <span class="navbar-text">Welcome, <?php echo htmlspecialchars($employer['Name']); ?></span>
-                <a class="nav-link" href="employer_dashboard.php">Dashboard</a>
+                <a class="nav-link" href="employer_Profile.html">Dashboard</a>
                 <a class="nav-link" href="logout.php">Logout</a>
             </div>
         </div>
