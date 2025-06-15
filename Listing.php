@@ -12,7 +12,7 @@ if (!isset($_SESSION['user_id'])) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Listing | JobFinder</title>
-    <link rel="stylesheet" href="Listing.css">
+    <link rel="stylesheet" href="css/Listing.css">
 </head>
     
 <body>
@@ -65,13 +65,13 @@ if (!isset($_SESSION['user_id'])) {
         <section class="job-listings">
             <?php
             if ($selectedTag) {
-                $jobQuery = "SELECT * FROM job_listing WHERE tags = ?";
+                $jobQuery = "SELECT * FROM job_listing WHERE tags = ? AND Status = 'Active'";
                 $stmt = mysqli_prepare($conn, $jobQuery);
                 mysqli_stmt_bind_param($stmt, "s", $selectedTag);
                 mysqli_stmt_execute($stmt);
                 $jobResult = mysqli_stmt_get_result($stmt);
             } else {
-                $jobQuery = "SELECT * FROM job_listing";
+                $jobQuery = "SELECT * FROM job_listing WHERE Status = 'Active'";
                 $jobResult = mysqli_query($conn, $jobQuery);
             }
 
@@ -90,10 +90,10 @@ if (!isset($_SESSION['user_id'])) {
                     echo "</div>";
                     
                     echo "<div class='job-details'>";
-                    echo "<div class='detail-item'><img src='money.png' alt='Salary Icon' class='icon'> RM " . htmlspecialchars($job['Salary']) . "</div>";
-                    echo "<div class='detail-item'><img src='location.png' alt='Location Icon' class='icon'> " . htmlspecialchars($job['Location']) . "</div>";
+                    echo "<div class='detail-item'><img src='image/money.png' alt='Salary Icon' class='icon'> RM " . htmlspecialchars($job['Salary']) . "</div>";
+                    echo "<div class='detail-item'><img src='image/location.png' alt='Location Icon' class='icon'> " . htmlspecialchars($job['Location']) . "</div>";
                     echo "</div>";
-                    
+
                     echo "<div class='job-footer'>";
                     if ($interval->invert == 1) {
                         if ($daysAgo == 0) {
