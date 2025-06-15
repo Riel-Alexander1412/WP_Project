@@ -83,6 +83,7 @@ $result = mysqli_stmt_get_result($stmt);
                         <div class="application-body">
                             <?php if ($job['Status'] === 'Suspended'): ?>
                                 <div class="cancelled-msg">
+
                                     <strong>Cancelled due to suspended</strong>
                                 </div>
                                 <div class="application-notes">
