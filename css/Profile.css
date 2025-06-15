@@ -5,6 +5,7 @@ body {
   color: #ddd;
   background-image: url("../your-image.jpg");
   background-size: 1600px auto;
+  background-attachment: fixed;
   background-repeat: no-repeat;
   margin: 0;
   padding: 0;
