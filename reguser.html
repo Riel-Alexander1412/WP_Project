@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Title</title>
+    <link rel="stylesheet" href="reguser.css">
+    <meta name="viewport" content="width=device-width">
+    <script src="register.js"></script>
+</head>
+
+<script>
+
+function home(previous){
+
+    document.getElementById(previous).style.transition = "all 1s";
+    document.getElementById(previous).style.display = "flex";
+
+}
+
+</script>
+
+<body>
+
+    <div class="bg-img"></div>
+
+    <a onclick="home()" id="back-button"><img src="reg_logo/arrow.svg" style="width: inherit;"></a>
+    
+    <form id="user-personal" class="regform">
+        
+        <h2 style="margin-bottom: 0; text-align: center;">Enter your Personal Details</h2>
+
+        <span>
+            <img src="reg_logo/mail-logo.svg">
+            <input type="email" name="userEmail" placeholder="Email...">
+        </span>
+        
+        <span>
+            <img src="reg_logo/password-logo.svg">
+            <input type="password" name="userPwd" placeholder="Password...">
+        </span>
+            
+        <span>
+            <img src="reg_logo/name-logo.svg">
+            <input type="text" name="userName" placeholder="Name...">
+        </span>
+
+        <span>
+            <img src="reg_logo/phone-logo.svg">
+            <input type="text" name="userPhone" placeholder="Phone...">
+        </span>
+
+        <span>
+            <img src="reg_logo/birthday-logo.svg">
+            <input type="text" name="userDOB" placeholder="DD/MM/YYYY">
+        </span>
+
+        <span>
+            <img src="reg_logo/home-logo.svg">
+            <textarea name="userAddr" style="width: 310px; height: 60px; padding: 5px"></textarea>
+        </span>
+
+        <span>
+            <img src="reg_logo/country.svg">
+            <iframe src="country-dropdown.html" frameborder="0"></iframe>
+        </span>
+
+        <span>
+            <h3 style="margin: 0;">Gender</h3>
+            <div class="wrapper">
+                
+                <div class="gender-container" >
+                    <div class="custom-input" style="background-color: pink; border-bottom-left-radius: 10px ; border-top-left-radius: 10px;">
+                        <input type="radio" id="female" name="gender" value="Female">
+                        <label for="female"><img src="reg_logo/woman-logo.svg"></label>
+                    </div>
+                    <div class="custom-input" style="background-color: cornflowerblue; border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
+                        <input type="radio" id="male" name="gender" value="Male">
+                        <label for="male"><img src="reg_logo/man-logo.svg"></label>
+                    </div>
+                </div>
+                
+            </div>
+
+        </span>
+
+        <div class="submit-btn">
+            <input type="submit" id="submit-btn" onclick="changetab('user-work','user-personal')" value="Submit Form">
+        </div>
+        
+    </form>
+    
+
+    <form id="user-work" class="regform" action="insertuser.php" method="post" style="gap: 40px;">
+        <h2 style="margin: 0; height: 50px; text-align: center;">Enter your Work Details</h2>
+
+        <span>
+            <img src="reg_logo/mail-logo.svg">
+            <input type="email" name="userEdu" placeholder="Education...">
+        </span>
+            
+        <span>
+            <img src="reg_logo/name-logo.svg">
+            <input type="file" name="userResume">
+        </span>
+
+        <span>
+            <img src="reg_logo/phone-logo.svg">
+            <input type="file" name="userImage">
+        </span>
+
+        <span>
+            <img src="reg_logo/birthday-logo.svg">
+            <textarea name="userAddr" style="width: 300px; height: 80px; padding: 5px;"></textarea>
+        </span>
+
+        <div class="submit-btn">
+            <input type="submit" id="submit-btn" onclick="changetab('user-work','user-personal')" value="Submit Form">
+        </div>
+        
+    </form>
+
+
+    <form id="employer" class="regform" action="insertemployer.php" method="post">
+        <span>
+            <img src="reg_logo/mail-logo.svg">
+            <input type="email" name="userEmail" placeholder="Email...">
+        </span>
+        
+        <span>
+            <img src="reg_logo/password-logo.svg">
+            <input type="password" name="userPwd" placeholder="Password...">
+        </span>
+            
+        <span>
+            <img src="reg_logo/name-logo.svg">
+            <input type="text" name="userName" placeholder="Name...">
+        </span>
+
+        <span>
+            <img src="reg_logo/phone-logo.svg">
+            <input type="text" name="userPhone" placeholder="Phone...">
+        </span>
+    </form>
+
+
+</body>

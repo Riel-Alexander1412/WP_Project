@@ -1,31 +1,33 @@
 <?php
 include("connection.php");
 
-$userID = $_POST[""];
-$userName = $_POST[""];
-$userEmail = $_POST[""];
-$userPwd = $_POST[""];
-$userPhone = $_POST[""];
-$userAddr = $_POST[""];
-$userCOO = $_POST[""];
+$userName = $_POST["userName"];
+$userEmail = $_POST["userEmail"];
+$userPwd = $_POST["userPwd"];
+$userPhone = $_POST["userPhone"];
+$userAddr = $_POST["userAddr"];
+$userCOO = $_POST["userCOO"];
 $userDOB = $_POST[""];
 $userGender = $_POST[""];
+
 $userEdu = $_POST[""];
+$userResume = $_POST[""];
+$userImage = $_POST[""];
 $userUnique = $_POST[""];
 
 
-$query = "INSERT INTO user VALUES
-        ('$userID','$userName','$userPwd','$userPhone','$userAddr',
-        '$userCOO','$userDOB','$userGender','$userEdu','$userUnique')";
+$query = "INSERT INTO user 
+        (name,email,password,phonenum,address,coo,
+        dob,gender,hiedu,unifeat,resume,image)
+        VALUES
+        ('$userName','$userEmail','$userPwd','$userPhone','$userAddr','$userCOO',
+        '$userDOB','$userGender','$userEdu','$userUnique','$$userResume','$$userImage')";
 
 
 $result = $conn->query($query);
 
-if($result === TRUE) {
-    echo "Upload Successful";
-    echo"<script>window.location.assign='index.html'</script>";
-}
-else {
+
+if($result !== TRUE) {
     echo "Error: ".$insertquery;
 }
 
