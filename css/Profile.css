@@ -2,8 +2,10 @@
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
-  color: #333;
-  background-color: #f5f7fa;
+  color: #ddd;
+  background-image: url("../your-image.jpg");
+  background-size: 1600px auto;
+  background-repeat: no-repeat;
   margin: 0;
   padding: 0;
 }
@@ -12,11 +14,11 @@ body {
   max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  border-radius: 32px;
   margin-top: 30px;
   margin-bottom: 30px;
+  backdrop-filter: blur(50px);
 }
 
 h1,
@@ -80,7 +82,7 @@ h3 {
 }
 
 #view-unifeat-text {
-  background-color: #f8f9fa;
+  backdrop-filter: blur(90px);
   padding: 15px;
   border-radius: 5px;
   border-top: 2px solid #c8c9ca;
@@ -193,7 +195,7 @@ input[type="file"] {
   display: flex;
   flex-direction: row;
   column-gap: 2em;
-  background-color: #f8f9fa;
+  backdrop-filter: blur(90px);
   padding: 0.5em;
   border-radius: 8px;
   border-top: 2px solid #c8c9ca;
