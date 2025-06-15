@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="container">
             <a class="navbar-brand" href="#">Job Finder System</a>
             <div class="navbar-nav">
-                <a class="nav-link" href="employer_Profile.html">Dashboard</a>
+                <a class="nav-link" href="employer_Profile.html">Manage Profile</a>
                 <a class="nav-link" href="ManageListings.php">Manage Jobs</a>
                 <a class="nav-link" href="logout.php">Logout</a>
             </div>
