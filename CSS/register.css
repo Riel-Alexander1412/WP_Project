@@ -1,0 +1,22 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    align-content: center;
+}
+
+.container {
+    max-width: 50%;
+    height: 50%;
+    margin: auto;
+    padding: 20px;
+    background-color: aqua;
+}
+
+#title {
+    margin-top: 0;
+}
+
+form {
+    margin: 0;
+}
