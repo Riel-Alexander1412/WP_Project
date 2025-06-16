@@ -3,8 +3,8 @@ body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
   color: #ddd;
-  background-image: url("../your-image.jpg");
-  background-size: 1600px auto;
+  background-image: url("../Assets/standardbg.jpg");
+  background-size: cover;
   background-attachment: fixed;
   background-repeat: no-repeat;
   margin: 0;
