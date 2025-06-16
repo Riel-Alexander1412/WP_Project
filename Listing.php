@@ -23,7 +23,7 @@
                 <ul style="display: flex; justify-content: space-between; gap:20px;">
                     <li><a href="Listing.php" class="active">Browse Jobs</a></li>
                     <li><a href="Applied.php">Applied Jobs</a></li>
-                    <li><a href="Profile.php">Profile</a></li>
+                    <li><a href="Profile.html">Profile</a></li>
                     <li><a href="Login.php">Logout</a></li>
                 </ul>
             </nav>
