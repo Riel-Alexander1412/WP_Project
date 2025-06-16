@@ -110,7 +110,7 @@ header {
     padding: 30px;
     display: none;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
 }
 
 #user-work {
@@ -129,7 +129,7 @@ header {
     display: none;
     justify-content: center;
     flex-direction: column;
-    gap: 110px;
+    gap: 20px;
 }
 
 #employer {
@@ -147,7 +147,7 @@ header {
     padding: 30px;
     display: none;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
 }
 
 #user-work span {
@@ -165,7 +165,7 @@ form span {
     height: 40px;
     align-items: center;
     justify-content: center;
-    gap: 30px;
+    gap: 20px;
 }
 
 form span img,input {
