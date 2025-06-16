@@ -64,6 +64,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apply for <?php echo htmlspecialchars($job['Position']); ?> | JobFinder</title>
+    <link rel="stylesheet" href="css/viewApplicants.css">
     <link rel="stylesheet" href="css/Apply.css">
     <script>
         function validateForm() {
@@ -80,13 +81,13 @@
 </head>
 <body>
     <header>
-        <div class="header-container">
+        <div class="header-container" style="display: flex; justify-content: space-between; width: 100%; padding: 0 20px; align-items:center;">
             <div class="logo">
                 <h1>JobFinder</h1>
             </div>
-            <nav>
-                <ul>
-                    <li><a href="Listing.php">Browse Jobs</a></li>
+            <nav style="display: flex; justify-content: space-between;">
+                <ul style="display: flex; justify-content: space-between; gap:20px;">
+                    <li><a href="Listing.php" class="active">Browse Jobs</a></li>
                     <li><a href="Applied.php">Applied Jobs</a></li>
                     <li><a href="Profile.php">Profile</a></li>
                     <li><a href="Login.php">Logout</a></li>

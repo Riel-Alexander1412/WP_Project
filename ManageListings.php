@@ -58,12 +58,13 @@ $employer = mysqli_fetch_assoc($employer_result);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Job Listings</title>
+    <link rel="stylesheet" href="CSS/viewApplicants.css">
     <link rel="stylesheet" href="css/ManageListings.css">
 </head>
 <body>
     <nav class="navbar">
         <div class="container">
-            <a class="navbar-brand" href="#">Job Finder System</a>
+            <a class="navbar-brand" href="ManageListings.php">JobFinder Employers</a>
             <div class="navbar-nav">
                 <span class="navbar-text">Welcome, <?php echo htmlspecialchars($employer['Name']); ?></span>
                 <a class="nav-link" href="employer_Profile.html">Manage Profile</a>
@@ -131,5 +132,38 @@ $employer = mysqli_fetch_assoc($employer_result);
             </div>
         <?php endif; ?>
     </div>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-info">
+                <div class="footer-logo">Job<span>Finder</span></div>
+                <p>Connecting exceptional slavery with forward-thinking black companies worldwide.</p>
+            </div>
+            
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>For Employers</h4>
+                    <ul>
+                        <li><a href="#">Post a Job</a></li>
+                        <li><a href="#">Search Candidates</a></li>
+                        <li><a href="#">Pricing Plans</a></li>
+                        <li><a href="#">Employer Resources</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="employer_Profile.html">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>       
+        <div class="copyright">
+            &copy; 2077 JobFinder. All rights reserved.
+        </div>
+    </footer> 
 </body>
 </html>

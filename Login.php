@@ -61,232 +61,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: #f5f5f5;
-            color: #333;
-            line-height: 1.6;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-        }
-        
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
-        }
-        
-        .logo span {
-            color: #3498db;
-        }
-        
-        .login-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 70vh;
-        }
-        
-        .login-box {
-            background-color: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 450px;
-        }
-        
-        .login-box h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #2c3e50;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-            transition: border 0.3s;
-        }
-        
-        .form-group input:focus {
-            border-color: #3498db;
-            outline: none;
-        }
-        
-        .remember-forgot {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .remember-me {
-            display: flex;
-            align-items: center;
-        }
-        
-        .remember-me input {
-            margin-right: 8px;
-        }
-        
-        .forgot-password a {
-            color: #3498db;
-            text-decoration: none;
-        }
-        
-        .forgot-password a:hover {
-            text-decoration: underline;
-        }
-        
-        .login-button {
-            width: 100%;
-            padding: 12px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .login-button:hover {
-            background-color: #2980b9;
-        }
-        
-        .register-link {
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        .register-link a {
-            color: #3498db;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        
-        .register-link a:hover {
-            text-decoration: underline;
-        }
-        
-        .social-login {
-            margin-top: 30px;
-            text-align: center;
-        }
-        
-        .social-login p {
-            margin-bottom: 15px;
-            color: #7f8c8d;
-            position: relative;
-        }
-        
-        .social-login p::before,
-        .social-login p::after {
-            content: "";
-            display: inline-block;
-            width: 30%;
-            height: 1px;
-            background-color: #ddd;
-            position: absolute;
-            top: 50%;
-        }
-        
-        .social-login p::before {
-            left: 0;
-        }
-        
-        .social-login p::after {
-            right: 0;
-        }
-        
-        .social-icons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
-        
-        .social-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-        
-        .social-icon:hover {
-            transform: translateY(-3px);
-        }
-        
-        .google {
-            background-color: #db4437;
-        }
-        
-        .linkedin {
-            background-color: #0077b5;
-        }
-        
-        .facebook {
-            background-color: #4267b2;
-        }
-        .error-message {
-            color: #e74c3c;
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 10px;
-            background: rgba(231, 76, 60, 0.3);
-            border-radius: 5px;
-        }
-        
-        footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #2c3e50;
-            color: white;
-            margin-top: 50px;
-        }
-    </style>
+    <link rel="stylesheet" href="CSS/viewApplicants.css">
+    <link rel="stylesheet" href="CSS/Login.css">
 </head>
 <body>
     <header>
         <div class="container">
             <div class="logo">
-                Job<span>Finder</span>
+                <img src="Assets/Image/logo_color.png" alt="text of logo" style="height:5vh;">
+                Job<span style="color:yellow;">Finder</span>
             </div>
         </div>
     </header> 
@@ -339,9 +122,37 @@
         </div>
     </div> 
     <footer>
-        <div class="container">
-            <p>&copy; 2077 Cyberpunk Edgerunner. All rights reserved.</p>
+        <div class="footer-content">
+            <div class="footer-info">
+                <div class="footer-logo">Job<span>Finder</span></div>
+                <p>Connecting exceptional slavery with forward-thinking black companies worldwide.</p>
+            </div>
+            
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>For Employers</h4>
+                    <ul>
+                        <li><a href="#">Post a Job</a></li>
+                        <li><a href="#">Search Candidates</a></li>
+                        <li><a href="#">Pricing Plans</a></li>
+                        <li><a href="#">Employer Resources</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>       
+        <div class="copyright">
+            &copy; 2077 JobFinder. All rights reserved.
         </div>
-    </footer>
+    </footer>   
 </body>
 </html>

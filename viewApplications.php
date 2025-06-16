@@ -6,6 +6,14 @@
     if (isset($_GET['job_id'])) {
         $jobID = $_GET['job_id'];
         
+        $query = "SELECT j.Position as jName, e.Name as cName, e.Address as eAddress 
+                            FROM job_listing j
+                            JOIN employer e ON j.EmployerID = e.Email 
+                            WHERE j.ListingID = ? " ;
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "s", $jobID);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
         function getTotalApplication($conn, $jobID){
             $sql = "SELECT COUNT(*) AS app_count FROM applied_jobs aj WHERE aj.jobID ='$jobID'";
             $result = $conn->query($sql);
@@ -20,6 +28,19 @@
             }
         }
         $totalapp = getTotalApplication($conn, $jobID);
+        
+        $jName = "N/A";
+        $cName = "N/A";
+        $eAddress = "N/A";
+        
+        if (mysqli_num_rows($result) > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+                $jName = $row['jName'];
+                $cName = $row['cName'];
+                $eAddress = $row['eAddress'];
+            }
+        }
+        
     }
 ?>
 <html lang="en">
@@ -28,378 +49,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Applicants</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+    <link rel="stylesheet" href="CSS/viewApplicants.css">
+    <link rel="stylesheet" href="CSS/viewApplications.css">
 
-        :root {
-            --primary: #0d47a1;
-            --primary-light: #2196f3;
-            --secondary: #ffc107;
-            --light: #f5f7fa;
-            --dark: #2c3e50;
-            --success: #4CAF50;
-            --warning: #FF9800;
-            --danger: #F44336;
-            --gray: #7f8c8d;
-            --light-gray: #e0e0e0;
-            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        body {
-            background: linear-gradient(135deg, #f5f7fa, #e4e7f1);
-            color: #333;
-            line-height: 1.6;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        header {
-            background: white;
-            border-radius: 16px;
-            box-shadow: var(--card-shadow);
-            padding: 30px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .job-info {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .job-title {
-            font-size: 28px;
-            color: var(--dark);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .job-title i {
-            color: var(--primary);
-            font-size: 32px;
-        }
-
-        .job-meta {
-            display: flex;
-            gap: 20px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--gray);
-        }
-
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: var(--card-shadow);
-            display: flex;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            margin-right: 15px;
-        }
-
-        .stat-info {
-            flex: 1;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .stat-title {
-            font-size: 14px;
-            color: var(--gray);
-        }
-
-        .controls {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .search-box {
-            flex: 1;
-            min-width: 250px;
-            position: relative;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 12px 20px 12px 45px;
-            border-radius: 50px;
-            border: 1px solid var(--light-gray);
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        .search-box input:focus {
-            outline: none;
-            border-color: var(--primary-light);
-            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
-        }
-
-        .search-box i {
-            position: absolute;
-            left: 18px;
-            top: 14px;
-            color: var(--gray);
-        }
-
-        .filter-tabs {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 10px 20px;
-            border-radius: 50px;
-            border: none;
-            background: var(--light);
-            color: var(--dark);
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .filter-btn.active, .filter-btn:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        .applicant-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 25px;
-        }
-
-        .applicant-card {
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: var(--card-shadow);
-            transition: all 0.3s;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .applicant-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-        }
-
-        .card-header {
-            padding: 25px;
-            background: linear-gradient(to right, var(--primary-light), var(--primary));
-            color: white;
-            position: relative;
-        }
-
-        .applicant-name {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .applicant-name i {
-            font-size: 24px;
-        }
-
-        .applicant-email {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 8px;
-            opacity: 0.9;
-        }
-
-        .card-body {
-            padding: 25px;
-            flex: 1;
-        }
-
-        .info-item {
-            display: flex;
-            margin-bottom: 16px;
-            gap: 15px;
-        }
-
-        .info-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary);
-            flex-shrink: 0;
-        }
-
-        .info-content {
-            flex: 1;
-        }
-
-        .info-label {
-            font-size: 14px;
-            color: var(--gray);
-            margin-bottom: 4px;
-        }
-
-        .info-value {
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        .card-footer {
-            padding: 20px;
-            border-top: 1px solid var(--light-gray);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .status {
-            padding: 8px 16px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .status.new {
-            background: rgba(33, 150, 243, 0.15);
-            color: var(--primary);
-        }
-
-        .status.reviewed {
-            background: rgba(76, 175, 80, 0.15);
-            color: var(--success);
-        }
-
-        .status.rejected {
-            background: rgba(244, 67, 54, 0.15);
-            color: var(--danger);
-        }
-
-        .action-btn {
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            border: none;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .action-btn.primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .action-btn.primary:hover {
-            background: #0b3d91;
-            transform: translateY(-2px);
-        }
-
-        .action-btn.secondary {
-            background: white;
-            color: var(--dark);
-            border: 1px solid var(--light-gray);
-        }
-
-        .action-btn.secondary:hover {
-            background: var(--light);
-        }
-
-        @media (max-width: 768px) {
-            .job-title {
-                font-size: 24px;
-            }
-            
-            .applicant-cards {
-                grid-template-columns: 1fr;
-            }
-            
-            header {
-                padding: 20px;
-            }
-            
-            .controls {
-                flex-direction: column;
-            }
-            
-            .search-box {
-                min-width: 100%;
-            }
-        }
-    </style>
 </head>
 <body>
+    <header style="background:linear-gradient(135deg, #1a73e8, #0d47a1); border-radius:0;">
+        <div class="header-content" style="width:100%;">
+            <div class="logo">
+                <img src="Assets/Image/logo_color.png" alt="text of logo" style="height:5vh;">
+                Job<span>Finder</span>
+            </div>
+            <div class="employer-actions">
+                <button class="btn btn-secondary" onclick="window.history.back();">
+                    <i class="fas fa-arrow-left"></i> Back to Search
+                </button>
+            </div>
+        </div>
+    </header> 
     <div class="container">
         <header>
             <div class="job-info">
                 <h1 class="job-title">
                     <i class="fas fa-briefcase"></i>
-                    Senior Frontend Developer
+                    <?php echo $jName;?>
                 </h1>
-                <p>Tech Innovations Inc. • San Francisco, CA</p>
+                <p><?php echo $cName ?>•<?php echo $eAddress?></p>
                 
                 <div class="job-meta">
                     <div class="meta-item">
@@ -433,8 +108,7 @@
                     <div class="stat-title">Total Applicants</div>
                 </div>
             </div>
-        </div>
-        
+        </div>      
         <div class="controls">
             <div class="search-box">
                 <i class="fas fa-search"></i>
@@ -455,8 +129,7 @@
                     <i class="fas fa-times"></i> Rejected
                 </button>
             </div>
-        </div>
-        
+        </div>       
         <div class="applicant-cards">
             <?php
                 if (isset($_GET['job_id'])) {
@@ -540,9 +213,12 @@
                                         <?= ucfirst($statusClass) ?> Application
                                     </span>
                                     <div class="actions">
-                                        <button class="action-btn secondary">
-                                            <i class="fas fa-eye"></i> View
-                                        </button>
+                                        <form action="viewApplicant.php" method="post">
+                                            <input name="email" value="<?php echo $row['UserEmail'];?>" style="display:none;">
+                                            <button class="action-btn secondary" type="submit">
+                                                <i class="fas fa-eye"></i> View
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -569,7 +245,39 @@
             
         </div>
     </div>
-    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-info">
+                <div class="footer-logo">Job<span>Finder</span></div>
+                <p>Connecting exceptional slavery with forward-thinking black companies worldwide.</p>
+            </div>
+            
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>For Employers</h4>
+                    <ul>
+                        <li><a href="#">Post a Job</a></li>
+                        <li><a href="#">Search Candidates</a></li>
+                        <li><a href="#">Pricing Plans</a></li>
+                        <li><a href="#">Employer Resources</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="employer_Profile.html">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>       
+        <div class="copyright">
+            &copy; 2077 JobFinder. All rights reserved.
+        </div>
+    </footer> 
     <script>
         // Filter functionality
         document.addEventListener('DOMContentLoaded', function() {
