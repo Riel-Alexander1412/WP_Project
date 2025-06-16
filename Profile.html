@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Profile</title>
+    <link rel="stylesheet" href="css/Profile.css" />
+  </head>
+  <body>
+    <div id="profile-container">
+      <h1 id="profile-title">My Profile</h1>
+
+      <!-- Edit Profile Form -->
+      <div id="edit-form" class="hidden">
+        <form id="profile-form">
+          <div>
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required />
+          </div>
+
+          <div>
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" />
+          </div>
+
+          <div>
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address" />
+          </div>
+
+          <div>
+            <label for="coo">Country of Origin:</label>
+            <input type="text" id="coo" name="coo" />
+          </div>
+
+          <div>
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="hiedu">Highest Education:</label>
+            <select id="hiedu" name="hiedu">
+              <option value="SPM/GCSE">SPM/GCSE</option>
+              <option value="Diploma">Diploma</option>
+              <option value="Degree">Degree</option>
+              <option value="Master">Master</option>
+              <option value="PhD">PhD</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="unifeat">Unique Features/Skills:</label>
+            <textarea id="unifeat" name="unifeat" rows="4"></textarea>
+          </div>
+
+          <div class="button-group">
+            <button type="submit">Save Profile</button>
+            <button type="button" id="cancel-edit">Cancel</button>
+          </div>
+        </form>
+
+        <!-- File Upload Sections -->
+        <div class="upload-section">
+          <h3>Upload Resume</h3>
+          <form id="resume-form" enctype="multipart/form-data">
+            <input
+              type="file"
+              id="resume"
+              name="resume"
+              accept=".pdf,.doc,.docx"
+            />
+            <button type="submit">Upload Resume</button>
+          </form>
+        </div>
+
+        <div class="upload-section">
+          <h3>Upload Profile Image</h3>
+          <form id="image-form" enctype="multipart/form-data">
+            <input type="file" id="image" name="image" accept="image/*" />
+            <button type="submit">Upload Image</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- View Profile Section -->
+      <div id="view-profile">
+        <div id="profile-image-container">
+          <img id="profile-image" src="placeholder.jpg" alt="Profile Image" />
+          <button id="edit-profile" class="hidden">Edit Profile</button>
+        </div>
+
+        <div class="right">
+          <div id="profile-details-big">
+            <h3>Details</h3>
+            <div id="profile-details">
+              <div id="labels">
+                <h4>Name</h4>
+                <h4>Email</h4>
+                <h4>Phone Number</h4>
+                <h4>Home Address</h4>
+                <h4>Country of Origins</h4>
+                <h4>Gender</h4>
+                <h4>Highest Level of Education</h4>
+              </div>
+              <div id="view-info">
+                <p id="view-name"></p>
+                <p id="view-email"></p>
+                <p id="view-phone"></p>
+                <p id="view-address"></p>
+                <p id="view-coo"></p>
+                <p id="view-gender"></p>
+                <p id="view-hiedu"></p>
+              </div>
+            </div>
+          </div>
+
+          <div id="view-unifeat">
+            <h3>Unique Features/Skills</h3>
+            <p id="view-unifeat-text"></p>
+          </div>
+
+          <div id="resume-section">
+            <h3>Resume</h3>
+            <a id="resume-link" href="#" target="_blank" class="hidden"
+              >Download Resume</a
+            >
+            <p id="no-resume" class="hidden">No resume uploaded</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Check if we're viewing a specific profile (from URL parameter)
+        const urlParams = new URLSearchParams(window.location.search);
+        const profileId = urlParams.get("id");
+
+        // Load profile data
+        loadProfile(profileId);
+
+        // Set up event listeners
+        document
+          .getElementById("edit-profile")
+          .addEventListener("click", showEditForm);
+        document
+          .getElementById("cancel-edit")
+          .addEventListener("click", hideEditForm);
+        document
+          .getElementById("profile-form")
+          .addEventListener("submit", saveProfile);
+        document
+          .getElementById("resume-form")
+          .addEventListener("submit", uploadResume);
+        document
+          .getElementById("image-form")
+          .addEventListener("submit", uploadImage);
+      });
+
+      function loadProfile(profileId = null) {
+        const formData = new FormData();
+        formData.append("action", "get_profile");
+
+        if (profileId) {
+          formData.append("profile_id", profileId);
+        }
+
+        fetch("Profile.php", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              displayProfile(data.profile);
+
+              // Show edit button only for own profile
+              if (data.is_own_profile) {
+                document
+                  .getElementById("edit-profile")
+                  .classList.remove("hidden");
+                // Store current profile data for editing
+                currentProfile = data.profile;
+              }
+            } else {
+              alert(data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Failed to load profile");
+          });
+      }
+
+      function displayProfile(profile) {
+        // Display view mode
+        document.getElementById("view-name").textContent = profile.Name || "";
+        document.getElementById("view-email").textContent = profile.Email || "";
+        document.getElementById("view-phone").textContent =
+          profile.PhoneNum || "";
+        document.getElementById("view-address").textContent =
+          profile.Address || "";
+        document.getElementById("view-coo").textContent = profile.COO || "";
+        document.getElementById("view-gender").textContent =
+          profile.Gender || "";
+        document.getElementById("view-hiedu").textContent = profile.HiEdu || "";
+        document.getElementById("view-unifeat-text").textContent =
+          profile.UniFeat || "";
+
+        // Display profile image if available
+        document.getElementById("profile-image").src = profile.ImageUrl;
+
+        // Display resume if available
+        const resumeLink = document.getElementById("resume-link");
+        const noResume = document.getElementById("no-resume");
+        if (profile.ResumeUrl) {
+          resumeLink.href = profile.ResumeUrl;
+          resumeLink.textContent = "Download: " + (profile.Resume || "resume");
+          resumeLink.classList.remove("hidden");
+          noResume.classList.add("hidden");
+        } else {
+          resumeLink.classList.add("hidden");
+          noResume.classList.remove("hidden");
+        }
+        // Show view mode
+        document.getElementById("view-profile").classList.remove("hidden");
+        document.getElementById("edit-form").classList.add("hidden");
+      }
+
+      function showEditForm() {
+        // Populate form fields with current profile data
+        document.getElementById("name").value = currentProfile.Name || "";
+        document.getElementById("phone").value = currentProfile.PhoneNum || "";
+        document.getElementById("address").value = currentProfile.Address || "";
+        document.getElementById("coo").value = currentProfile.COO || "";
+        document.getElementById("gender").value =
+          currentProfile.Gender || "Male";
+        document.getElementById("hiedu").value =
+          currentProfile.HiEdu || "SPM/GCSE";
+        document.getElementById("unifeat").value = currentProfile.UniFeat || "";
+
+        // Show edit form
+        document.getElementById("view-profile").classList.add("hidden");
+        document.getElementById("edit-form").classList.remove("hidden");
+      }
+
+      function hideEditForm() {
+        document.getElementById("view-profile").classList.remove("hidden");
+        document.getElementById("edit-form").classList.add("hidden");
+      }
+
+      function saveProfile(e) {
+        e.preventDefault();
+
+        const formData = new FormData(document.getElementById("profile-form"));
+        formData.append("action", "update_profile");
+
+        fetch("Profile.php", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              alert("Profile updated successfully");
+              loadProfile(); // Reload the profile
+            } else {
+              alert(data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Failed to update profile");
+          });
+      }
+
+      function uploadResume(e) {
+        e.preventDefault();
+
+        const formData = new FormData(document.getElementById("resume-form"));
+        formData.append("action", "upload_resume");
+
+        fetch("Profile.php", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              alert("Resume uploaded successfully");
+              loadProfile(); // Reload the profile
+            } else {
+              alert(data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Failed to upload resume");
+          });
+      }
+
+      function uploadImage(e) {
+        e.preventDefault();
+
+        const formData = new FormData(document.getElementById("image-form"));
+        formData.append("action", "upload_image");
+
+        fetch("Profile.php", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.status === "success") {
+              alert("Profile image uploaded successfully");
+              loadProfile(); // Reload the profile
+            } else {
+              alert(data.message);
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Failed to upload image");
+          });
+      }
+
+      // Global variable to store current profile data
+      let currentProfile = {};
+    </script>
+  </body>
+</html>
