@@ -1,7 +1,7 @@
 USE job_finder_system;
 
 CREATE TABLE `admin` (
-  Email varchar(20) NOT NULL PRIMARY KEY,
+  Email varchar(200) NOT NULL PRIMARY KEY,
   Password varchar(20) NOT NULL,
   Name varchar(20) NOT NULL,
   LastActive timestamp NULL DEFAULT NULL
@@ -9,7 +9,7 @@ CREATE TABLE `admin` (
 
 CREATE TABLE `employer` (
   Email varchar(20) NOT NULL PRIMARY KEY,
-  Password varchar(30) NOT NULL,
+  Password varchar(200) NOT NULL,
   Name varchar(50) NOT NULL COMMENT 'Name of user or company',
   Contact varchar(50) NOT NULL,
   Address varchar(50) NOT NULL,
