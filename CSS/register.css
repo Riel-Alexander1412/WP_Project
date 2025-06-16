@@ -100,7 +100,7 @@ header {
     color: var(--light);
     top: 3%;
     width: 50%;
-    height: 85%;
+    height: 70%;
     margin-inline: auto;
     right: 0;
     left: 0;
@@ -110,7 +110,7 @@ header {
     padding: 30px;
     display: none;
     flex-direction: column;
-    gap: 30px;
+    gap: 10px;
 }
 
 #user-work {
@@ -118,7 +118,7 @@ header {
     color: var(--light);
     top: 3%;
     width: 50%;
-    height: 85%;
+    height: 70%;
     margin-inline: auto;
     right: 0;
     left: 0;
@@ -129,7 +129,7 @@ header {
     display: none;
     justify-content: center;
     flex-direction: column;
-    gap: 30px;
+    gap: 110px;
 }
 
 #employer {
@@ -137,7 +137,7 @@ header {
     color: var(--light);
     top: 3%;
     width: 50%;
-    height: 85%;
+    height: 70%;
     margin-inline: auto;
     right: 0;
     left: 0;
@@ -147,7 +147,7 @@ header {
     padding: 30px;
     display: none;
     flex-direction: column;
-    gap: 30px;
+    gap: 10px;
 }
 
 #user-work span {

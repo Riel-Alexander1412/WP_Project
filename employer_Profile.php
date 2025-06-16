@@ -72,7 +72,7 @@ switch ($action) {
             }
 
             // Generate unique filename
-            $file_ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+            $file_ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
             $file_name = 'employer_' . $employer_email . '_' . time() . '.' . $file_ext;
             $file_path = $upload_dir . $file_name;
 
