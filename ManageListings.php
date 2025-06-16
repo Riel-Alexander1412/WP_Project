@@ -1,8 +1,7 @@
 <?php
 session_start();
 include ('connection.php');
-include ("control.php");
-
+include ('control.php');
 
 $employer_id = $_SESSION['email'];
 $error = '';
@@ -59,24 +58,26 @@ $employer = mysqli_fetch_assoc($employer_result);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Job Listings</title>
     <link rel="stylesheet" href="CSS/viewApplicants.css">
-    <link rel="stylesheet" href="css/ManageListings.css">
 </head>
 <body>
-    <nav class="navbar">
+    <header>
         <div class="container">
-            <a class="navbar-brand" href="ManageListings.php">JobFinder Employers</a>
+            <div class="logo">
+                <img src="Assets/Image/logo_color.png" alt="text of logo" style="height:5vh;">
+                Job<span style="color:yellow;">Finder</span> Employer
+            </div>
             <div class="navbar-nav">
-                <span class="navbar-text">Welcome, <?php echo htmlspecialchars($employer['Name']); ?></span>
-                <a class="nav-link" href="employer_Profile.html">Manage Profile</a>
-                <a class="nav-link" href="logout.php">Logout</a>
+                <h2>Welcome, <?php echo htmlspecialchars($employer['Name']); ?></h2>
+                <a class="btn btn-primary" href="employer_Profile.html">Manage Profile</a>
+                <a class="btn btn-primary" href="logout.php">Logout</a>
             </div>
         </div>
-    </nav>
+    </header>
 
     <div class="container">
         <div class="page-header">
             <h2>Manage Your Job Listings</h2>
-            <a href="post_job.php" class="btn btn-success">Post New Job</a>
+            <a href="post_job.php" class="btn btn-primary">Post New Job</a>
         </div>
 
         <?php if ($error): ?>
@@ -118,9 +119,9 @@ $employer = mysqli_fetch_assoc($employer_result);
                                 View Applications
                             </a>
                             <div class="btn-group">
-                                <a href="edit_job.php?job_id=<?php echo $job['ListingID']; ?>" class="btn btn-warning">
-                                    Edit
-                                </a>
+                                <!-- <a href="edit_job.php?job_id=<?php echo $job['ListingID']; ?>" class="btn btn-warning"> -->
+                                    <!-- Edit -->
+                                <!-- </a> -->
                                 <a href="ManageListings.php?delete=<?php echo $job['ListingID']; ?>" class="btn btn-danger" 
                                    onclick="return confirm('Are you sure you want to delete this job listing?');">
                                     Delete

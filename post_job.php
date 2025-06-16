@@ -3,12 +3,12 @@ session_start();
 include ('connection.php');
 
 // Check if user is logged in as employer
-if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] != 'employer') {
+if (!isset($_SESSION['role']) || $_SESSION['role'] != 'employer') {
     header('Location: Login.php');
     exit();
 }
 
-$employer_id = $_SESSION['user_id'];
+$employer_id = $_SESSION['email'];
 $error = '';
 $success = '';
 
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $salary = mysqli_real_escape_string($conn, $_POST['salary']);
     $tags = mysqli_real_escape_string($conn, $_POST['tags']);
     $location = mysqli_real_escape_string($conn, $_POST['location']);
-    $description = mysqli_real_escape_string($conn, $_POST['description']);
+    $escapedemail = mysqli_real_escape_string($conn, $employer_id);
 
     // Basic validation
     if (empty($position) || empty($location) || empty($salary)) {
@@ -41,11 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             Tags, 
             PostDate, 
             Location, 
-            Status,
-            Description
+            Status
         ) VALUES (
             '$position',
-            $employer_id,
+            '$escapedemail',
             '$job_level',
             '$min_education',
             '$course_type',
@@ -54,8 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             '$tags',
             CURDATE(),
             '$location',
-            'New',
-            '$description'
+            'New'
         )";
 
         if (mysqli_query($conn, $sql)) {
@@ -74,19 +72,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Post New Job</title>
-    <link rel="stylesheet" href="css/post_job.css">
+    <link rel="stylesheet" href="CSS/post_job.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="container">
-            <a class="navbar-brand" href="#">Job Finder System</a>
-            <div class="navbar-nav">
-                <a class="nav-link" href="employer_Profile.html">Manage Profile</a>
-                <a class="nav-link" href="ManageListings.php">Manage Jobs</a>
-                <a class="nav-link" href="logout.php">Logout</a>
+    <header>
+        <div class="container1">
+            <div class="logo">
+                <img src="Assets/Image/logo_color.png" alt="text of logo" style="height:5vh;">
+                Job<span style="color:yellow;">Finder</span>Employer
             </div>
         </div>
-    </nav>
+    </header> 
 
     <div class="container">
         <h2>Post New Job Listing</h2>
@@ -106,12 +102,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                        value="<?php echo isset($_POST['position']) ? htmlspecialchars($_POST['position']) : ''; ?>">
             </div>
 
-            <div class="form-group">
-                <label for="description">Job Description</label>
-                <textarea id="description" name="description" rows="5"><?php
-echo isset($_POST['description']) ? htmlspecialchars($_POST['description']) : '';
-?></textarea>
-            </div>
 
             <div class="form-group">
                 <label for="job_level">Job Level*</label>
