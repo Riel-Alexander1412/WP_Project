@@ -1,72 +1,70 @@
 <?php
-session_start();
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
-}
+    include("connection.php");
+    include("control.php");
+    session_start();
 
-include("connection.php");
 
-$user_id = $_SESSION['user_id'];
-$job_id = isset($_GET['job_id']) ? intval($_GET['job_id']) : 0;
+    $user_id = $_SESSION['email'];
+    $job_id = isset($_GET['job_id']) ? intval($_GET['job_id']) : 0;
 
-if ($job_id <= 0) {
-    echo "<script>alert('Invalid job selection.'); window.location.href='Listing.php';</script>";
-    exit;
-}
-
-$job = null;
-$query = "SELECT * FROM job_listing WHERE ListingID = ?";
-$stmt = mysqli_prepare($conn, $query);
-mysqli_stmt_bind_param($stmt, "i", $job_id);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-
-if ($result && mysqli_num_rows($result) > 0) {
-    $job = mysqli_fetch_assoc($result);
-} else {
-    echo "<script>alert('Job not found.'); window.location.href='Listing.php';</script>";
-    exit;
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $notes = trim($_POST['notes']);
-
-    if (empty($notes)) {
-        echo "<script>alert('Notes cannot be empty.'); window.history.back();</script>";
+    if ($job_id <= 0) {
+        echo "<script>alert('Invalid job selection.'); window.location.href='Listing.php';</script>";
         exit;
     }
 
-    $check = mysqli_prepare($conn, "SELECT * FROM applied_jobs WHERE UserID=? AND JobID=?");
-    mysqli_stmt_bind_param($check, "ii", $user_id, $job_id);
-    mysqli_stmt_execute($check);
-    $checkResult = mysqli_stmt_get_result($check);
+    $job = null;
+    $query = "SELECT * FROM job_listing WHERE ListingID = ?";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "i", $job_id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
-    if (mysqli_num_rows($checkResult) > 0) {
-        echo "<script>
-            alert('You have already applied for this job.');
-            window.location.href = 'Listing.php';
-        </script>";
+    if ($result && mysqli_num_rows($result) > 0) {
+        $job = mysqli_fetch_assoc($result);
     } else {
-        $insert = mysqli_prepare($conn, "INSERT INTO applied_jobs (UserID, JobID, Notes) VALUES (?, ?, ?)");
-        mysqli_stmt_bind_param($insert, "iis", $user_id, $job_id, $notes);
-        if (mysqli_stmt_execute($insert)) {
+        echo "<script>alert('Job not found.'); window.location.href='Listing.php';</script>";
+        exit;
+    }
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $notes = trim($_POST['notes']);
+
+        if (empty($notes)) {
+            echo "<script>alert('Notes cannot be empty.'); window.history.back();</script>";
+            exit;
+        }
+
+        $check = mysqli_prepare($conn, "SELECT * FROM applied_jobs WHERE UserEmail=? AND JobID=?");
+        mysqli_stmt_bind_param($check, "ii", $user_id, $job_id);
+        mysqli_stmt_execute($check);
+        $checkResult = mysqli_stmt_get_result($check);
+
+        if (mysqli_num_rows($checkResult) > 0) {
             echo "<script>
-                alert('Application submitted successfully!');
-                window.location.href = 'Applied.php';
+                alert('You have already applied for this job.');
+                window.location.href = 'Listing.php';
             </script>";
         } else {
-            echo "<script>alert('Error submitting application.');</script>";
+            $sql = "INSERT INTO applied_jobs(`UserEmail`, `JobID`, `Notes`) VALUES (?, ?, ?)";
+            $insert = mysqli_prepare($conn, $sql);
+            mysqli_stmt_bind_param($insert, "sis", $user_id, $job_id, $notes);
+            if (mysqli_stmt_execute($insert)) {
+                echo "<script>
+                    alert('Application submitted successfully!');
+                    window.location.href = 'Applied.php';
+                </script>";
+            } else {
+                echo "<script>alert('Error submitting application.');</script>";
+            }
         }
     }
-}
 ?>
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apply for <?php echo htmlspecialchars($job['Position']); ?> | JobFinder</title>
+    <link rel="stylesheet" href="css/viewApplicants.css">
     <link rel="stylesheet" href="css/Apply.css">
     <script>
         function validateForm() {
@@ -83,13 +81,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <header>
-        <div class="header-container">
+        <div class="header-container" style="display: flex; justify-content: space-between; width: 100%; padding: 0 20px; align-items:center;">
             <div class="logo">
                 <h1>JobFinder</h1>
             </div>
-            <nav>
-                <ul>
-                    <li><a href="Listing.php">Browse Jobs</a></li>
+            <nav style="display: flex; justify-content: space-between;">
+                <ul style="display: flex; justify-content: space-between; gap:20px;">
+                    <li><a href="Listing.php" class="active">Browse Jobs</a></li>
                     <li><a href="Applied.php">Applied Jobs</a></li>
                     <li><a href="Profile.php">Profile</a></li>
                     <li><a href="Login.php">Logout</a></li>
@@ -107,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="job-details">
                 <div class="detail-card">
-                    <h3><img src="image/info.png" alt="Info Icon" height="30px" width="30px">Job Details</h3>
+                    <h3><img src="Assets/Image/info.png" alt="Info Icon" height="30px" width="30px">Job Details</h3>
                     <ul>
                         <li><strong>Company Type:</strong> <?php echo htmlspecialchars($job['CType']); ?></li>
                         <li><strong>Location:</strong> <?php echo htmlspecialchars($job['Location']); ?></li>
@@ -116,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </ul>
                 </div>
                 <div class="detail-card">
-                    <h3><img src="image/hat.png" alt="Graduate Hat Icon" height="30px" width="30px">Requirements</h3>
+                    <h3><img src="Assets/Image/hat.png" alt="Graduate Hat Icon" height="30px" width="30px">Requirements</h3>
                     <ul>
                         <li><strong>Level:</strong> <?php echo htmlspecialchars($job['JbLV']); ?></li>
                         <li><strong>Minimum Level:</strong> <?php echo htmlspecialchars($job['MinLV']); ?></li>
