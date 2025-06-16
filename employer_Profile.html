@@ -18,9 +18,11 @@
                 type="file"
                 id="company-logo"
                 name="image"
-                accept="image/*"
+                accept="image/jpeg, image/png, image/gif"
               />
+              <p id="file-validation" class="validation-message"></p>
               <button type="button" id="upload-image-btn">Update Logo</button>
+              <button type="button" id="cancel-upload">Cancel</button>
             </form>
           </div>
           <button id="edit-image-btn">Edit Logo</button>
@@ -168,11 +170,17 @@
                 document.getElementById("view-description-text").textContent =
                   profile.Description;
 
+                const profileImage = document.getElementById("profile-image");
                 if (profile.ImageUrl) {
-                  document.getElementById("profile-image").src =
-                    profile.ImageUrl;
+                  profileImage.src = profile.ImageUrl;
+                  profileImage.onerror = function () {
+                    // Fallback if image fails to load (e.g., invalid path)
+                    this.src = "placeholder.jpg";
+                  };
+                } else {
+                  // Default image if no URL is provided
+                  profileImage.src = "placeholder.jpg";
                 }
-
                 // Update edit form
                 document.getElementById("edit-name").value = profile.Name;
                 document.getElementById("edit-email").value = profile.Email;
@@ -231,8 +239,15 @@
         }
 
         function uploadImage() {
-          const formData = new FormData(imageForm);
+          const fileInput = document.querySelector("#company-logo");
+          if (!fileInput.files.length) {
+            alert("Please select an image file first");
+            return;
+          }
+
+          const formData = new FormData();
           formData.append("action", "upload_image");
+          formData.append("image", fileInput.files[0]);
 
           fetch("employer_Profile.php", {
             method: "POST",
@@ -241,9 +256,13 @@
             .then((response) => response.json())
             .then((data) => {
               if (data.status === "success") {
-                document.getElementById("profile-image").src = data.imageUrl;
+                // Force refresh by adding timestamp
+                document.getElementById("profile-image").src =
+                  data.imageUrl + "?" + new Date().getTime();
                 imageUploadSection.classList.add("hidden");
                 alert("Company logo updated successfully");
+                // Refresh the profile to get all updated data
+                loadProfile();
               } else {
                 alert("Error uploading image: " + data.message);
               }
