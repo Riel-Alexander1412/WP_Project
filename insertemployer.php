@@ -72,7 +72,7 @@ $insertStmt->bind_param("sssssss",
 
 // 🔄 Execute insert
 if ($insertStmt->execute()) {
-    echo "<script>alert('Registration successful!'); window.location.href='login.html';</script>";
+    echo "<script>alert('Registration successful!'); window.location.href='login.php';</script>";
 } else {
     echo "<script>alert('Registration failed. Please try again.'); window.location.href='register.html';</script>";
 }
