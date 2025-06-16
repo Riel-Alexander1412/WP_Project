@@ -18,7 +18,7 @@
             $user_data = null;
 
             foreach ($results as $user) {
-                if (password_verify() === $user['password']) {
+                if (password_verify($password,$user['password'])) {
                     $authenticated = true;
                     $user_data = $user;
                     break;
