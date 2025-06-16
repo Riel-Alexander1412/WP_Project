@@ -18,7 +18,7 @@
             $user_data = null;
 
             foreach ($results as $user) {
-                if ($password === $user['password']) {
+                if (password_verify($password,$user['password'])) {
                     $authenticated = true;
                     $user_data = $user;
                     break;
@@ -74,7 +74,7 @@
         </div>
     </header> 
 
-    
+
     <div class="container">
         <div class="login-container">
            
