@@ -3,12 +3,12 @@ session_start();
 include ('connection.php');
 
 // Check if user is logged in as employer
-if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] != 'employer') {
+if (!isset($_SESSION['role']) || $_SESSION['role'] != 'employer') {
     header('Location: Login.php');
     exit();
 }
 
-$employer_id = $_SESSION['user_id'];
+$employer_id = $_SESSION['email'];
 $error = '';
 $success = '';
 
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Job Listing</title>
-    <link rel="stylesheet" href="css/edit_job.css">
+    <link rel="stylesheet" href="CSS/edit_job.css">
 </head>
 <body>
     <nav class="navbar">

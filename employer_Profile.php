@@ -9,19 +9,20 @@ $response = ['status' => 'error', 'message' => 'Invalid request'];
 $action = $_POST['action'] ?? '';
 
 // Helper function to sanitize input
-function sanitizeInput($data) {
+function sanitizeInput($data)
+{
     return htmlspecialchars(strip_tags(trim($data)));
 }
 
 switch ($action) {
     case 'get_profile':
-        if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'employer') {
+        if (!isset($_SESSION['email']) || $_SESSION['role'] != 'employer') {
             $response['message'] = 'Not logged in as employer';
             break;
         }
 
-        $employer_id = $_SESSION['user_id'];
-        $stmt = $conn->prepare('SELECT * FROM employer WHERE EmpID = ?');
+        $employer_id = $_SESSION['email'];
+        $stmt = $conn->prepare('SELECT * FROM employer WHERE email = ?');
         $stmt->bind_param('i', $employer_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -31,7 +32,7 @@ switch ($action) {
 
             // Build full URL for profile image if it exists
             if (!empty($employer['Image'])) {
-                $employer['ImageUrl'] = 'data:image/jpeg;base64,'.base64_encode($employer['Image']);
+                $employer['ImageUrl'] = 'data:image/jpeg;base64,' . base64_encode($employer['Image']);
             } else {
                 $employer['ImageUrl'] = '';
             }
@@ -46,12 +47,12 @@ switch ($action) {
         break;
 
     case 'update_profile':
-        if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'employer') {
+        if (!isset($_SESSION['email']) || $_SESSION['role'] != 'employer') {
             $response['message'] = 'Not logged in as employer';
             break;
         }
 
-        $employer_id = $_SESSION['user_id'];
+        $employer_id = $_SESSION['email'];
 
         // Basic info
         $name = sanitizeInput($_POST['name'] ?? '');
@@ -62,7 +63,7 @@ switch ($action) {
 
         $stmt = $conn->prepare('UPDATE employer SET 
             Name = ?, Email = ?, Contact = ?, Address = ?, Description = ?
-            WHERE EmpID = ?');
+            WHERE email = ?');
         $stmt->bind_param('sssssi', $name, $email, $contact, $address, $description, $employer_id);
 
         if ($stmt->execute()) {
@@ -73,13 +74,13 @@ switch ($action) {
         break;
 
     case 'upload_image':
-        if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'employer') {
+        if (!isset($_SESSION['email']) || $_SESSION['role'] != 'employer') {
             $response['message'] = 'Not logged in as employer';
             break;
         }
 
         if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            $employer_id = $_SESSION['user_id'];
+            $employer_id = $_SESSION['email'];
             $image_data = file_get_contents($_FILES['image']['tmp_name']);
 
             $stmt = $conn->prepare('UPDATE employer SET Image = ? WHERE EmpID = ?');
@@ -87,9 +88,9 @@ switch ($action) {
 
             if ($stmt->execute()) {
                 $response = [
-                    'status' => 'success', 
+                    'status' => 'success',
                     'message' => 'Company logo updated successfully',
-                    'imageUrl' => 'data:image/jpeg;base64,'.base64_encode($image_data)
+                    'imageUrl' => 'data:image/jpeg;base64,' . base64_encode($image_data)
                 ];
             } else {
                 $response['message'] = 'Failed to update database: ' . $conn->error;
@@ -100,12 +101,12 @@ switch ($action) {
         break;
 
     case 'change_password':
-        if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] != 'employer') {
+        if (!isset($_SESSION['email']) || $_SESSION['role'] != 'employer') {
             $response['message'] = 'Not logged in as employer';
             break;
         }
 
-        $employer_id = $_SESSION['user_id'];
+        $employer_id = $_SESSION['email'];
         $current_password = $_POST['current_password'] ?? '';
         $new_password = $_POST['new_password'] ?? '';
         $confirm_password = $_POST['confirm_password'] ?? '';
