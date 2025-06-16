@@ -1,0 +1,192 @@
+:root {
+    --primary: #0d47a1;
+    --primary-light: #2196f3;
+    --secondary: #ffc107;
+    --light: #f5f7fa;
+    --dark: #2c3e50;
+    --success: #4CAF50;
+    --warning: #FF9800;
+    --danger: #F44336;
+    --gray: #7f8c8d;
+    --light-gray: #e0e0e0;
+}
+
+
+body {
+    margin: 0;
+}
+
+.bg-img {
+    background-image: url(your-image.jpg);
+    background-size: cover;
+    background-position: top;
+    filter: brightness(50%);
+    height: 100vh;
+}
+
+#back-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+}
+
+#user-personal {
+    position: absolute;
+    color: var(--light);
+    top: 3%;
+    width: 50%;
+    height: 85%;
+    margin-inline: auto;
+    right: 0;
+    left: 0;
+    background-color: white;
+    color: black;
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+#user-work {
+    position: absolute;
+    color: var(--light);
+    top: 3%;
+    width: 50%;
+    height: 85%;
+    margin-inline: auto;
+    right: 0;
+    left: 0;
+    background-color: white;
+    color: black;
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+#employer {
+    position: absolute;
+    color: var(--light);
+    top: 3%;
+    width: 50%;
+    height: 85%;
+    margin-inline: auto;
+    right: 0;
+    left: 0;
+    background-color: white;
+    color: black;
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+form {
+    position: absolute;
+    color: var(--light);
+    top: 3%;
+    width: 50%;
+    height: 85%;
+    margin-inline: auto;
+    right: 0;
+    left: 0;
+    background-color: white;
+    color: black;
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    
+}
+
+form span {
+    display: flex;
+    min-width: 450px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+form span img,input {
+    height: 80%;
+    margin: 0;
+    padding: 0;
+}
+
+form span input {
+    padding: 5px;
+    height: 60%;
+    width: 300px;
+}
+
+
+
+form span iframe {
+    width: 300px;
+    height: 30px;
+}
+
+form #submit-btn {
+    border: none;
+    background-color: var(--primary);
+    color: white;
+    border-radius: 10px;
+    width: 120px;
+    height: 45px;
+    cursor: pointer;
+}
+
+.submit-btn {
+    display: flex; 
+    flex-grow: 1;
+    justify-content: flex-end;
+    align-items: end;
+}
+
+
+/* this the gender radio button */
+
+.wrapper {
+    display: inline-flex;  
+    background-color: white;
+}
+
+.wrapper h3 {
+    margin: 0;
+    align-content: center;
+}
+
+.gender-container {
+    width: 300px;
+    display: flex;
+}
+
+.custom-input input[type=radio] {
+  display: none;
+}
+
+.custom-input label {
+  display: block;
+  width: 60px;
+  padding: 6px 8px;
+  color: black;
+  font-weight: bold;
+  text-align: center;
+}
+
+.custom-input input[type=radio]:checked + label {
+    background-color: wheat;
+    color: #000;
+    transition : all .2s 0s ease;
+}
+
+/* end or gender radio button */
+
