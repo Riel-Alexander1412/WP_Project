@@ -1,14 +1,21 @@
 <?php
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Access-Control-Allow-Credentials: true');
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    exit(0);
+}
 session_start();
 include ('connection.php');
 
 // Check if user is logged in as employer
-if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] != 'employer') {
+if (!isset($_SESSION['role']) || $_SESSION['role'] != 'employer') {
     header('Location: Login.php');
     exit();
 }
 
-$employer_id = $_SESSION['user_id'];
+$employer_id = $_SESSION['email'];
 $error = '';
 $success = '';
 
@@ -42,7 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $salary = mysqli_real_escape_string($conn, $_POST['salary']);
     $tags = mysqli_real_escape_string($conn, $_POST['tags']);
     $location = mysqli_real_escape_string($conn, $_POST['location']);
-    $description = mysqli_real_escape_string($conn, $_POST['description']);
     $status = mysqli_real_escape_string($conn, $_POST['status']);
 
     // Basic validation
@@ -59,7 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 Salary = '$salary',
                 Tags = '$tags',
                 Location = '$location',
-                Description = '$description',
                 Status = '$status'
                 WHERE ListingID = $job_id AND EmployerID = $employer_id";
 
@@ -82,19 +87,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Job Listing</title>
-    <link rel="stylesheet" href="css/edit_job.css">
+    <link rel="stylesheet" href="CSS/edit_job.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="container">
-            <a class="navbar-brand" href="#">Job Finder System</a>
-            <div class="navbar-nav">
-                <a class="nav-link" href="employer_Profile.html">Manage Profile</a>
-                <a class="nav-link" href="ManageListings.php">Manage Jobs</a>
-                <a class="nav-link" href="logout.php">Logout</a>
+    <header>
+        <div class="container1">
+            <div class="logo">
+                <img src="Assets/Image/logo_color.png" alt="text of logo" style="height:5vh;">
+                Job<span style="color:yellow;">Finder</span>Employer
             </div>
         </div>
-    </nav>
+    </header> 
 
     <div class="container">
         <h2>Edit Job Listing: <?php echo htmlspecialchars($job['Position']); ?></h2>
@@ -114,12 +117,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                        value="<?php echo htmlspecialchars($job['Position']); ?>">
             </div>
 
-            <div class="form-group">
-                <label for="description">Job Description</label>
-                <textarea id="description" name="description" rows="5"><?php
-echo htmlspecialchars($job['Description']);
-?></textarea>
-            </div>
 
             <div class="form-group">
                 <label for="job_level">Job Level*</label>
