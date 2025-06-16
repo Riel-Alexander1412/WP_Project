@@ -1,5 +1,4 @@
 <?php
-header('Content-Type: application/json; charset=UTF-8');
 session_start();
 
 // Database connection
@@ -15,18 +14,19 @@ function sanitizeInput($data)
 }
 
 switch ($action) {
+    // In the 'get_profile' case of your switch statement:
     case 'get_profile':
         if (!isset($_SESSION['loggedin'])) {
             $response['message'] = 'Not logged in';
             break;
         }
 
-        $user_id = $_SESSION['email'];
-        $profile_id = $_POST['profile_id'] ?? $user_id;
-        $is_own_profile = ($profile_id == $user_id);
+        $user_email = $_SESSION['email'];
+        $profile_email = $_POST['profile_email'] ?? $user_email;
+        $is_own_profile = ($profile_email == $user_email);
 
-        $stmt = $conn->prepare('SELECT * FROM user WHERE ID = ?');
-        $stmt->bind_param('i', $profile_id);
+        $stmt = $conn->prepare('SELECT * FROM user WHERE email = ?');
+        $stmt->bind_param('s', $profile_email);
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -34,22 +34,19 @@ switch ($action) {
             $results = $result->fetch_all(MYSQLI_ASSOC);
             $profile = $results[0];
 
-            // Build full URL for profile image if it exists
             if (!empty($profile['Image'])) {
-                $profile['ImageUrl'] = $profile['Image'];
+                if (strpos($profile['Image'], 'http') === 0) {
+                    $profile['ImageUrl'] = $profile['Image'];
+                } else {
+                    $base_url = (isset($_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'];
+                    $profile['ImageUrl'] = $base_url . '/' . ltrim($profile['Image'], '/');
+                }
+
+                if (!file_exists($profile['Image'])) {
+                    $profile['ImageUrl'] = '';  // Fallback to no image
+                }
             } else {
                 $profile['ImageUrl'] = '';
-            }
-
-            // Build full URL for resume if it exists
-            if (!empty($profile['Resume'])) {
-                $profile['ResumeUrl'] = $profile['Resume'];
-            }
-
-            // Remove sensitive data if viewing someone else's profile
-            if (!$is_own_profile) {
-                unset($profile['Password']);
-                unset($profile['DoB']);
             }
 
             $response = [
@@ -63,12 +60,12 @@ switch ($action) {
         break;
 
     case 'update_profile':
-        if (!isset($_SESSION['user_id'])) {
+        if (!isset($_SESSION['email'])) {
             $response['message'] = 'Not logged in';
             break;
         }
 
-        $user_id = $_SESSION['user_id'];
+        $user_email = $_SESSION['email'];
 
         // Basic info
         $name = sanitizeInput($_POST['name'] ?? '');
@@ -82,9 +79,9 @@ switch ($action) {
         $stmt = $conn->prepare('UPDATE user SET 
             Name = ?, PhoneNum = ?, Address = ?, COO = ?, 
             Gender = ?, HiEdu = ?, UniFeat = ? 
-            WHERE ID = ?');
-        $stmt->bind_param('sssssssi', $name, $phone, $address, $coo,
-            $gender, $hiedu, $unifeat, $user_id);
+            WHERE email = ?');
+        $stmt->bind_param('ssssssss', $name, $phone, $address, $coo,
+            $gender, $hiedu, $unifeat, $user_email);
 
         if ($stmt->execute()) {
             $response = ['status' => 'success', 'message' => 'Profile updated successfully'];
@@ -94,13 +91,13 @@ switch ($action) {
         break;
 
     case 'upload_resume':
-        if (!isset($_SESSION['user_id'])) {
+        if (!isset($_SESSION['email'])) {
             $response['message'] = 'Not logged in';
             break;
         }
 
         if (isset($_FILES['resume']) && $_FILES['resume']['error'] === UPLOAD_ERR_OK) {
-            $user_id = $_SESSION['user_id'];
+            $user_email = $_SESSION['email'];
             $upload_dir = 'uploads/resumes/';
 
             if (!file_exists($upload_dir)) {
@@ -108,12 +105,12 @@ switch ($action) {
             }
 
             $file_ext = pathinfo($_FILES['resume']['name'], PATHINFO_EXTENSION);
-            $file_name = 'resume_' . $user_id . '_' . time() . '.' . $file_ext;
+            $file_name = 'resume_' . $user_email . '_' . time() . '.' . $file_ext;
             $file_path = $upload_dir . $file_name;
 
             if (move_uploaded_file($_FILES['resume']['tmp_name'], $file_path)) {
-                $stmt = $conn->prepare('UPDATE user SET Resume = ? WHERE ID = ?');
-                $stmt->bind_param('si', $file_name, $user_id);
+                $stmt = $conn->prepare('UPDATE user SET Resume = ? WHERE email = ?');
+                $stmt->bind_param('ss', $file_name, $user_email);
 
                 if ($stmt->execute()) {
                     $response = ['status' => 'success', 'message' => 'Resume uploaded successfully', 'file_name' => $file_name];
@@ -130,14 +127,14 @@ switch ($action) {
         break;
 
     case 'upload_image':
-        if (!isset($_SESSION['user_id'])) {
+        if (!isset($_SESSION['email'])) {
             $response['message'] = 'Not logged in';
             break;
         }
 
         if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-            $user_id = $_SESSION['user_id'];
-            $upload_dir = 'Datastore/Images/';
+            $user_email = $_SESSION['email'];
+            $upload_dir = 'Datastore/';
 
             if (!file_exists($upload_dir)) {
                 mkdir($upload_dir, 0777, true);
@@ -153,12 +150,12 @@ switch ($action) {
             }
 
             $file_ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
-            $file_name = 'profile_' . $user_id . '_' . time() . '.' . $file_ext;
+            $file_name = 'profile_' . $user_email . '_' . time() . '.' . $file_ext;
             $file_path = $upload_dir . $file_name;
 
             if (move_uploaded_file($_FILES['image']['tmp_name'], $file_path)) {
-                $stmt = $conn->prepare('UPDATE user SET Image = ? WHERE ID = ?');
-                $stmt->bind_param('si', $file_name, $user_id);
+                $stmt = $conn->prepare('UPDATE user SET Image = ? WHERE email = ?');
+                $stmt->bind_param('ss', $file_name, $user_email);
 
                 if ($stmt->execute()) {
                     $response = ['status' => 'success', 'message' => 'Profile image uploaded successfully', 'file_name' => $file_name];

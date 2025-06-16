@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Your Profile</title>
-    <link rel="stylesheet" href="css/Profile.css" />
+    <link rel="stylesheet" href="CSS/Profile.css" />
   </head>
   <body>
     <div id="profile-container">
@@ -131,6 +131,9 @@
             >
             <p id="no-resume" class="hidden">No resume uploaded</p>
           </div>
+          <a class="" href="Listing.php"
+            ><button type="">Return to Listing</button></a
+          >
         </div>
       </div>
     </div>
@@ -139,10 +142,10 @@
       document.addEventListener("DOMContentLoaded", function () {
         // Check if we're viewing a specific profile (from URL parameter)
         const urlParams = new URLSearchParams(window.location.search);
-        const profileId = urlParams.get("id");
+        const profileEmail = urlParams.get("email");
 
         // Load profile data
-        loadProfile(profileId);
+        loadProfile(profileEmail);
 
         // Set up event listeners
         document
@@ -162,12 +165,12 @@
           .addEventListener("submit", uploadImage);
       });
 
-      function loadProfile(profileId = null) {
+      function loadProfile(profileEmail = null) {
         const formData = new FormData();
         formData.append("action", "get_profile");
 
-        if (profileId) {
-          formData.append("profile_id", profileId);
+        if (profileEmail) {
+          formData.append("profile_email", profileEmail);
         }
 
         fetch("Profile.php", {
@@ -213,7 +216,16 @@
           profile.UniFeat || "";
 
         // Display profile image if available
-        document.getElementById("profile-image").src = profile.ImageUrl;
+        const profileImage = document.getElementById("profile-image");
+        if (profile.ImageUrl) {
+          profileImage.src = profile.ImageUrl;
+          profileImage.onerror = function () {
+            // Fallback if image fails to load
+            this.src = "placeholder.jpg";
+          };
+        } else {
+          profileImage.src = "placeholder.jpg";
+        }
 
         // Display resume if available
         const resumeLink = document.getElementById("resume-link");
