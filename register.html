@@ -5,7 +5,7 @@
     <title>Title</title>
     <link rel="stylesheet" href="CSS/register.css">
     <meta name="viewport" content="width=device-width">
-    <script src="register.js"></script>
+    <script src="JS/register.js"></script>
 </head>
 
 <script>
@@ -36,7 +36,7 @@ function home(previous){
 
     <div class="bg-img"></div>
 
-    <a onclick="home()" id="home-button"><img src="reg_logo/home-logo.svg" style="width: inherit; filter: invert(100%);"></a>
+    <a onclick="home()" id="home-button"><img src="register_logo/home-logo.svg" style="width: inherit; filter: invert(100%);"></a>
 
     <div id="main-page">
         <h2 style="margin-top: 0; margin-bottom: 60px; color: var(--primary);">Register as?</h2>
@@ -44,6 +44,7 @@ function home(previous){
             <button id="hover-btn" onclick="changetab('main-page','user-personal')"><p style="margin: 0; font-size: 16px;">User</p></button>
             <button id="hover-btn" onclick="changetab('main-page','employer')"><p style="margin: 0; font-size: 16px;">Employer</p></button>
         </div>
+        <a href="Login.php"><p style="margin-top: 30px;">Already a user? Login</p></a>
         
     </div>
 
@@ -54,37 +55,37 @@ function home(previous){
             <h2 style="margin-bottom: 0; text-align: center;">Enter your Personal Details</h2>
 
             <span>
-                <img src="reg_logo/mail-logo.svg">
+                <img src="register_logo/mail-logo.svg">
                 <input type="email" name="userEmail" placeholder="Email..." required>
             </span>
             
             <span>
-                <img src="reg_logo/password-logo.svg">
+                <img src="register_logo/password-logo.svg">
                 <input type="password" name="userPwd" placeholder="Password..." required>
             </span>
                 
             <span>
-                <img src="reg_logo/name-logo.svg">
+                <img src="register_logo/name-logo.svg">
                 <input type="text" name="userName" placeholder="Name..." required>
             </span>
 
             <span>
-                <img src="reg_logo/phone-logo.svg">
+                <img src="register_logo/phone-logo.svg">
                 <input type="text" name="userPhone" placeholder="Phone..." required>
             </span>
 
             <span>
-                <img src="reg_logo/birthday-logo.svg">
+                <img src="register_logo/birthday-logo.svg">
                 <input type="date" name="userDOB" placeholder="DD/MM/YYYY" required>
             </span>
 
             <span>
-                <img src="reg_logo/home-logo.svg">
+                <img src="register_logo/home-logo.svg">
                 <textarea name="userAddr" style="width: 310px; height: 60px; padding: 5px"></textarea>
             </span>
 
             <span>
-                <img src="reg_logo/country.svg">
+                <img src="register_logo/country.svg">
                 <select class="form-select" autocomplete="country" id="userCOO" name="userCOO" form="user">
                     <option>select country</option>
                     <option value="Afghanistan">Afghanistan</option>
@@ -349,13 +350,13 @@ function home(previous){
                     <div class="custom-input" style="background-color: pink;">
                         <input type="radio" form="user" id="female" name="userGender" value="Female" required>
                         <label for="female">
-                            <img src="reg_logo/woman-logo.svg">
+                            <img src="register_logo/woman-logo.svg">
                         </label>
                     </div>
                     <div class="custom-input" style="background-color: cornflowerblue;">
                         <input type="radio" form="user" id="male" name="userGender" value="Male" required>
                         <label for="male">
-                            <img src="reg_logo/man-logo.svg">
+                            <img src="register_logo/man-logo.svg">
                         </label>
                     </div>
                 </div>    
@@ -372,7 +373,7 @@ function home(previous){
             <h2 style="margin: 0; height: 50px; text-align: center;">Enter your Work Details</h2>
 
             <span>
-                <img src="reg_logo/education-logo.svg">
+                <img src="register_logo/education-logo.svg">
                 <!-- <input type="text" name="userEdu" placeholder="Education(O-Level/Diploma)..." required> -->
 
                 <select name="userEdu" style="width: 250px;" required>
@@ -391,20 +392,20 @@ function home(previous){
             
             <span>
                 
-                <img src="reg_logo/work-logo.svg" style="margin: 0; margin-left: 35px;">
+                <img src="register_logo/work-logo.svg" style="margin: 0; margin-left: 35px;">
                 <p style="margin-left: 40px;">Resume</p>
                 <input type="file" name="userResume" style="width: 220px;" required>
             </span>
 
             <span style="margin-bottom: 30px;">
                 
-                <img src="reg_logo/image-logo.svg" style="margin: 0; margin-left: 35px;">
+                <img src="register_logo/image-logo.svg" style="margin: 0; margin-left: 35px;">
                 <p style="margin-left: 45px;">Image</p>
                 <input type="file" name="userImage" style="width: 220px;" required>
             </span>
 
             <span>
-                <img src="reg_logo/birthday-logo.svg" alt="">
+                <img src="register_logo/birthday-logo.svg" alt="">
                 <textarea name="userUnique" style="width: 300px; height: 80px; padding: 5px;" placeholder="Your interesting feature!"></textarea required>
             </span>
 
@@ -420,37 +421,37 @@ function home(previous){
         <h2 style="margin: 0; height: 50px; text-align: center;">Employer Details</h2>
         
         <span>
-            <img src="reg_logo/mail-logo.svg">
+            <img src="register_logo/mail-logo.svg">
             <input type="email" name="empEmail" placeholder="Email..." required>
         </span>
         
         <span>
-            <img src="reg_logo/password-logo.svg">
+            <img src="register_logo/password-logo.svg">
             <input type="password" name="empPwd" placeholder="Password..." required>
         </span>
             
         <span>
-            <img src="reg_logo/name-logo.svg">
+            <img src="register_logo/name-logo.svg">
             <input type="text" name="empName" placeholder="Name..." required>
         </span>
 
         <span>
-            <img src="reg_logo/phone-logo.svg">
+            <img src="register_logo/phone-logo.svg">
             <input type="text" name="empContact" placeholder="Contact Number..." required>
         </span>
 
         <span>
-            <img src="reg_logo/location-logo.svg">
+            <img src="register_logo/location-logo.svg">
             <textarea name="empAddr" placeholder="Address..." style="width: 305px; height: 60px; padding: 5px; margin-bottom: 10px;" required></textarea>
         </span>
 
         <span>
-            <img src="reg_logo/description-logo.svg">
+            <img src="register_logo/description-logo.svg">
             <textarea name="empDesc" placeholder="Description..." style="width: 305px; height: 60px; padding: 5px; margin-top: 15px;" required></textarea>
         </span>
 
         <span style="gap: 0;">
-            <img src="reg_logo/image-logo.svg" style="margin-left: 10px;">
+            <img src="register_logo/image-logo.svg" style="margin-left: 10px;">
             <p style="margin-left: 40px;">Image:</p>
             <input type="file" name="empImage" placeholder="" style="width: 260px;">
         </span>

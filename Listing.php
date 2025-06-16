@@ -1,11 +1,7 @@
 <?php
     include "connection.php";
+    include "control.php";
     session_start();
-
-    if (!isset($_SESSION['loggedin'])) {
-        header("Location: Login.php");
-        exit;
-    }
 ?>
 
 <html lang="en">
@@ -13,17 +9,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Listing | JobFinder</title>
+    <link rel="stylesheet" href="css/viewApplicants.css">
     <link rel="stylesheet" href="css/Listing.css">
 </head>
     
 <body>
     <header>
-        <div class="header-container">
+        <div class="header-container" style="display: flex; justify-content: space-between; width: 100%; padding: 0 20px; align-items:center;">
             <div class="logo">
                 <h1>JobFinder</h1>
             </div>
-            <nav>
-                <ul>
+            <nav style="display: flex; justify-content: space-between;">
+                <ul style="display: flex; justify-content: space-between; gap:20px;">
                     <li><a href="Listing.php" class="active">Browse Jobs</a></li>
                     <li><a href="Applied.php">Applied Jobs</a></li>
                     <li><a href="Profile.php">Profile</a></li>
@@ -91,8 +88,8 @@
                     echo "</div>";
                     
                     echo "<div class='job-details'>";
-                    echo "<div class='detail-item'><img src='image/money.png' alt='Salary Icon' class='icon'> RM " . htmlspecialchars($job['Salary']) . "</div>";
-                    echo "<div class='detail-item'><img src='image/location.png' alt='Location Icon' class='icon'> " . htmlspecialchars($job['Location']) . "</div>";
+                    echo "<div class='detail-item'><img src='Assets/Image/money.png' alt='Salary Icon' class='icon'> RM " . htmlspecialchars($job['Salary']) . "</div>";
+                    echo "<div class='detail-item'><img src='Assets/Image/location.png' alt='Location Icon' class='icon'> " . htmlspecialchars($job['Location']) . "</div>";
                     echo "</div>";
 
                     echo "<div class='job-footer'>";
